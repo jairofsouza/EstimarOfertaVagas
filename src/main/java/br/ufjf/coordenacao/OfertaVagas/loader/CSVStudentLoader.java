@@ -1,10 +1,15 @@
 package br.ufjf.coordenacao.OfertaVagas.loader;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
 
-import br.ufjf.coordenacao.OfertaVagas.model.Student;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVRecord;
+
+import br.ufjf.coordenacao.OfertaVagas.model.CourseStatus;
+import br.ufjf.coordenacao.OfertaVagas.model.StudentsHistory;
 
 public class CSVStudentLoader implements IStudentLoader {
 
@@ -14,8 +19,33 @@ public class CSVStudentLoader implements IStudentLoader {
 		this._file = CSVfile;
 	}
 	
-	public Collection<Student> getStudentsHistory() {
-		return new ArrayList<Student>();
+	public StudentsHistory getStudentsHistory() throws IOException {
+		
+		Reader in = new FileReader(this._file);
+		Iterable<CSVRecord> records = CSVFormat.EXCEL.parse(in);
+		
+		StudentsHistory sh = new StudentsHistory();
+		CourseStatus status;
+		
+		for (CSVRecord record : records) {
+		    String courseStatus = record.get(2).trim(); //Aprovado ou cursando
+		    
+		    if (courseStatus.equals("Cursando")) status = CourseStatus.ENROLLED;
+		    else if (courseStatus.equals("Aprovado")) status = CourseStatus.APPROVED;
+		    else throw new IOException("Arquivo CSV inv‡lido");
+		    	
+		    this.add(sh,
+		    		record.get(0).trim(), // matricula 
+		    		record.get(1).trim(), // disciplina
+		    		status // cusando ou aprovado
+		    	);
+		}
+		
+		return sh;
+	}
+
+	private void add(StudentsHistory sh, String id, String course, CourseStatus status) {
+    	sh.add(id, course, status);
 	}
 	
 }
