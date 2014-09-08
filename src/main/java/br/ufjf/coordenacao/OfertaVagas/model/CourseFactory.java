@@ -1,6 +1,7 @@
 package br.ufjf.coordenacao.OfertaVagas.model;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class CourseFactory {
 	
@@ -25,6 +26,23 @@ public class CourseFactory {
 		}
 		
 		return c;		
+	}
+	
+	public static void addCourse(String id, Course c) {
+		getInstance().map.put(id, c);
+	}
+	
+	public static boolean contains(String id) {
+		return getInstance().map.containsKey(id);
+	}
+	
+	public static String makeString() {
+		String out = "";
+		HashMap<String, Course> m = getInstance().map;
+		for (String string : m.keySet()) 
+			out +=  "("+string + ", " + m.get(string) + ") \n";
+		
+		return out;
 	}
 	
 }

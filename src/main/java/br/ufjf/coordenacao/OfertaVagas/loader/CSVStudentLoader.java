@@ -37,7 +37,7 @@ public class CSVStudentLoader implements IStudentLoader {
 		    this.add(sh,
 		    		record.get(0).trim(), // matricula 
 		    		record.get(1).trim(), // disciplina
-		    		status // cusando ou aprovado
+		    		status // cursando ou aprovado
 		    	);
 		}
 		

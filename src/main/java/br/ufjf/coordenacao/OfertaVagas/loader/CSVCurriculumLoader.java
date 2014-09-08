@@ -16,23 +16,30 @@ public class CSVCurriculumLoader implements ICurriculumLoader {
 
 	private File _mandatoryFile;
 	private File _electiveFile;
+	private File _equivalenceFile;
+	Curriculum _cur;
 	
-	public CSVCurriculumLoader(File mandatoryFile, File electiveFile) {
+	public CSVCurriculumLoader(File mandatoryFile, File electiveFile, File equivalenceFile) {
 		this._mandatoryFile = mandatoryFile;
 		this._electiveFile = electiveFile;
+		this._equivalenceFile = equivalenceFile;
+		
+		this._cur = new Curriculum();
 	}
 	
 	public Curriculum getCurriculum() throws IOException {
 		
-		Curriculum cur = new Curriculum();
-		loadMandatoryFile(cur);
+		loadMandatoryFile();
 
-		if(this._electiveFile != null) loadElectiveFile(cur);
+		if(this._electiveFile != null) 		loadElectiveFile();
+		
+		// É necessário que o processamento de equivalências seja feito ao final da carga de eletivas + obrigatórias
+		if(this._equivalenceFile != null)	loadEquivalenceFile();
 
-		return cur;
+		return _cur;
 	}
 
-	private void loadMandatoryFile(Curriculum cur) throws IOException {
+	private void loadMandatoryFile() throws IOException {
 		Reader in = new FileReader(this._mandatoryFile);
 		Iterable<CSVRecord> mandatoryRecords = CSVFormat.EXCEL.parse(in);
 		
@@ -41,7 +48,7 @@ public class CSVCurriculumLoader implements ICurriculumLoader {
 		    String course   = record.get(1).trim(); //Disciplina
 		    
 		    Course c = CourseFactory.getCourse(course);
-		    cur.addMandatoryCourse(Integer.valueOf(semester), c);
+		    this._cur.addMandatoryCourse(Integer.valueOf(semester), c);
 		    
 		    for (int i = 2; i < record.size(); i++) {
 		    	String prerequisite = record.get(i).trim(); //Pré-requisito
@@ -50,15 +57,16 @@ public class CSVCurriculumLoader implements ICurriculumLoader {
 		    }
 
 		}
+		in.close();
 	}
 
-	private void loadElectiveFile(Curriculum cur) throws IOException {
+	private void loadElectiveFile() throws IOException {
 		Reader in = new FileReader(this._electiveFile);
 		Iterable<CSVRecord> electiveRecords = CSVFormat.EXCEL.parse(in);
 		
 		for (CSVRecord record : electiveRecords) {
 		    Course c = CourseFactory.getCourse(record.get(0).trim());
-		    cur.addElectiveCourse(c);
+		    this._cur.addElectiveCourse(c);
 		    
 		    for (int i = 1; i < record.size(); i++) {
 		    	String prerequisite = record.get(i).trim(); //Pré-requisito
@@ -66,7 +74,36 @@ public class CSVCurriculumLoader implements ICurriculumLoader {
 		    	c.addPrerequisite(pre);		    	
 		    }
 		}
+		in.close();
 
+	}
+	
+	private void loadEquivalenceFile() throws IOException {
+		Reader in = new FileReader(this._equivalenceFile);
+		Iterable<CSVRecord> eqRecords = CSVFormat.EXCEL.parse(in);
+		
+		for (CSVRecord record : eqRecords) {
+			String idDaGrade = record.get(0).trim();
+		    String idNaoDaGrade = record.get(1).trim();
+
+		    Course c = null;
+		    if(!CourseFactory.contains(idDaGrade) && CourseFactory.contains(idNaoDaGrade)) {
+		    	String aux = idNaoDaGrade;
+		    	idNaoDaGrade = idDaGrade;
+		    	idDaGrade = aux;
+		    }
+		    
+		    else if(CourseFactory.contains(idDaGrade) && CourseFactory.contains(idNaoDaGrade))
+			    throw new IOException("Equivalência de duas disciplinas já existentes na grade: " + idDaGrade + " <-> " + idNaoDaGrade);
+
+			else if(!CourseFactory.contains(idDaGrade) && !CourseFactory.contains(idNaoDaGrade))
+				throw new IOException("Equivalência de duas disciplinas não existentes na grade: " + idDaGrade + " <-> " + idNaoDaGrade);
+			   
+		    c = CourseFactory.getCourse(idDaGrade);
+		    CourseFactory.addCourse(idNaoDaGrade, c);
+		}		    
+
+		in.close();
 	}
 	
 }

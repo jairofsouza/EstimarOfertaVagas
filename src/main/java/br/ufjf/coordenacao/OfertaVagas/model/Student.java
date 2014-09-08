@@ -14,6 +14,10 @@ public class Student {
 	
 	
 	public void addCourse(String course, CourseStatus status) {
+		
+		// A linha abaixo é necessária por conta das equivalências de disciplinas
+		course = CourseFactory.getCourse(course).getId();
+		
 		if (status == CourseStatus.APPROVED)
 			this.__approvedCourses.add(course);
 		else 
