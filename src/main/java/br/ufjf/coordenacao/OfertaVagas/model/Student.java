@@ -1,11 +1,12 @@
 package br.ufjf.coordenacao.OfertaVagas.model;
 
+import java.util.HashMap;
 import java.util.TreeSet;
 
 public class Student {
 
-	private TreeSet<String> __enrolledCourses = new TreeSet<String>();
-	private TreeSet<String> __approvedCourses = new TreeSet<String>();
+	
+	private HashMap<CourseStatus, TreeSet<Course>> courses = new HashMap<CourseStatus, TreeSet<Course>>();
 	private String _id;
 	
 	public Student(String id) {
@@ -16,12 +17,12 @@ public class Student {
 	public void addCourse(String course, CourseStatus status) {
 		
 		// A linha abaixo é necessária por conta das equivalências de disciplinas
-		course = CourseFactory.getCourse(course).getId();
+		Course course2 = CourseFactory.getCourse(course);
 		
-		if (status == CourseStatus.APPROVED)
-			this.__approvedCourses.add(course);
-		else 
-			this.__enrolledCourses.add(course);
+		if (!this.courses.containsKey(status))
+			this.courses.put(status, new TreeSet<Course>());
+		
+		this.courses.get(status).add(course2);
 	}
 	
 	public String getId() { return this._id; }
@@ -30,15 +31,19 @@ public class Student {
 	public String toString() {
 		String output = "Student " + this._id;
 
-		output += ", APPROVED=";
-		for (Object string : this.__approvedCourses.toArray()) 
-			output += "," + string;
-		
-		output += ", ENROLLED=";
-		for (Object string : this.__enrolledCourses.toArray()) 
-			output += "," + string;
-		
+		for (CourseStatus status : this.courses.keySet()) {
+			output += ", "+status.name()+"=";
+			for (Object string : this.courses.get(status).toArray()) 
+				output += "," + string;
+		}
 		return output;
+	}
+	
+	public TreeSet<Course> getCourses(CourseStatus cs) {
+		if (!this.courses.containsKey(cs))
+			this.courses.put(cs, new TreeSet<Course>());
+
+		return courses.get(cs);
 	}
 	
 }

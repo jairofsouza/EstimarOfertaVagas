@@ -15,6 +15,9 @@ public class Course implements Comparable<Course> {
 		this.prerequisite.add(c);
 	}
 
+	public ArrayList<Course> getPrerequisite() {
+		return this.prerequisite;
+	}
 	
 	public String getId() { return id; }
 	

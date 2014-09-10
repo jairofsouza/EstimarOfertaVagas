@@ -22,21 +22,21 @@ public class CSVStudentLoader implements IStudentLoader {
 	public StudentsHistory getStudentsHistory() throws IOException {
 		
 		Reader in = new FileReader(this._file);
-		Iterable<CSVRecord> records = CSVFormat.EXCEL.parse(in);
+		Iterable<CSVRecord> records = CSVFormat.newFormat(';').parse(in);
 		
 		StudentsHistory sh = new StudentsHistory();
 		CourseStatus status;
 		
 		for (CSVRecord record : records) {
-		    String courseStatus = record.get(2).trim(); //Aprovado ou cursando
+		    String courseStatus = record.get(6).trim(); //Aprovado ou cursando
 		    
-		    if (courseStatus.equals("Cursando")) status = CourseStatus.ENROLLED;
-		    else if (courseStatus.equals("Aprovado")) status = CourseStatus.APPROVED;
-		    else throw new IOException("Arquivo CSV inv‡lido");
+		    if (courseStatus.equals("Matriculado")) status = CourseStatus.ENROLLED;
+		    else if (courseStatus.equals("Aprovado") || courseStatus.equals("Dispensado")) status = CourseStatus.APPROVED;
+		    else continue; // do nothing
 		    	
 		    this.add(sh,
-		    		record.get(0).trim(), // matricula 
-		    		record.get(1).trim(), // disciplina
+		    		record.get(1).trim(), // matricula 
+		    		record.get(4).trim(), // disciplina
 		    		status // cursando ou aprovado
 		    	);
 		}

@@ -40,4 +40,13 @@ public class Curriculum {
 		return out;
 	}
 	
+	public HashMap<Integer, TreeSet<Course>> getMandatories() {
+		return _curriculum;
+	}
+	
+	public TreeSet<Course> getElectives() {
+		return _electives;
+	}
+	
+	
 }

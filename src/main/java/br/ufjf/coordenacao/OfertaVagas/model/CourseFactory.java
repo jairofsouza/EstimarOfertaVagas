@@ -1,7 +1,6 @@
 package br.ufjf.coordenacao.OfertaVagas.model;
 
 import java.util.HashMap;
-import java.util.Iterator;
 
 public class CourseFactory {
 	
