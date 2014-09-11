@@ -14,22 +14,11 @@ public class Estimator {
 	
 	private Curriculum curriculum;
 	private StudentsHistory history;
+	private EstimativesResult result;
 
 	public Estimator(Curriculum c, StudentsHistory sh) {
 			this.curriculum = c;
 			this.history = sh;
-	}
-	
-	//Imprimir quantas vagas eu preciso em cada disciplina
-	public void process() {
-		EstimativesResult result = new EstimativesResult();
-		HashMap<Integer, TreeSet<Course>> mantadories = this.curriculum.getMandatories();
-		for (Integer semester : mantadories.keySet()) {
-			System.out.println("Semester: " + semester);
-			for (Course course : mantadories.get(semester)) {
-				System.out.println(course.getId());		
-			}
-		}
 	}
 	
 /**
@@ -53,7 +42,7 @@ public class Estimator {
 	public EstimativesResult populateData() {
 
 		// Fazendo somente com disciplinas obrigat—rias
-		EstimativesResult result = new EstimativesResult();
+		this.result = new EstimativesResult();
 		HashMap<Integer, TreeSet<Course>> mantadories = this.curriculum.getMandatories();
 		Collection<Student> students = this.history.getStudents().values();
 		for (Integer semester : mantadories.keySet()) {
@@ -62,7 +51,6 @@ public class Estimator {
 				int countIsEnrolled = 0;
 				int countCompletePrereq = 0;
 				
-				//Colocar a regra: se o aluno tiver sido aprovado na disciplina, nao entrar nesse loop
 				for(Student st : students) {
 					
 					// Se o aluno j‡ passou na disciplina, n‹o entra na contagem
@@ -73,7 +61,7 @@ public class Estimator {
 					if (st.getCourses(CourseStatus.ENROLLED).contains(course))
 						countIsEnrolled++;
 					
-					// Se o aluno n‹o fez ou n‹o est‡ fazendo, talvez ele possa fazer no pr—ximo per’odo
+					// Se o aluno n‹o fez ou n‹o est‡ fazendo a disciplina, talvez ele possa fazer no pr—ximo per’odo
 					else {
 						int qtdPrereqCompleted = 0;
 						int qtdPrereqEnrolled = 0;
@@ -94,19 +82,8 @@ public class Estimator {
 			}
 		}
 
-		return result;
-				
-				
+		return this.result;	
 	}
 	
-	//Imprimir quantos alunos fizeram cada disciplina
-	public void process2() {
-		
-	}
-
-	//Imprimir quantos alunos reprovaram em cada disciplina
-	public void process3() {
-		
-	}
 	
 }
