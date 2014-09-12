@@ -8,7 +8,7 @@ import java.io.Reader;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
-import br.ufjf.coordenacao.OfertaVagas.model.CourseStatus;
+import br.ufjf.coordenacao.OfertaVagas.model.ClassStatus;
 import br.ufjf.coordenacao.OfertaVagas.model.StudentsHistory;
 
 public class CSVStudentLoader implements IStudentLoader {
@@ -25,13 +25,13 @@ public class CSVStudentLoader implements IStudentLoader {
 		Iterable<CSVRecord> records = CSVFormat.newFormat(';').parse(in);
 		
 		StudentsHistory sh = new StudentsHistory();
-		CourseStatus status;
+		ClassStatus status;
 		
 		for (CSVRecord record : records) {
-		    String courseStatus = record.get(6).trim(); //Aprovado ou cursando
+		    String classStatus = record.get(6).trim(); //Aprovado ou cursando
 		    
-		    if (courseStatus.equals("Matriculado")) status = CourseStatus.ENROLLED;
-		    else if (courseStatus.equals("Aprovado") || courseStatus.equals("Dispensado")) status = CourseStatus.APPROVED;
+		    if (classStatus.equals("Matriculado")) status = ClassStatus.ENROLLED;
+		    else if (classStatus.equals("Aprovado") || classStatus.equals("Dispensado")) status = ClassStatus.APPROVED;
 		    else continue; // do nothing
 		    	
 		    this.add(sh,
@@ -44,8 +44,8 @@ public class CSVStudentLoader implements IStudentLoader {
 		return sh;
 	}
 
-	private void add(StudentsHistory sh, String id, String course, CourseStatus status) {
-    	sh.add(id, course, status);
+	private void add(StudentsHistory sh, String id, String _class, ClassStatus status) {
+    	sh.add(id, _class, status);
 	}
 	
 }

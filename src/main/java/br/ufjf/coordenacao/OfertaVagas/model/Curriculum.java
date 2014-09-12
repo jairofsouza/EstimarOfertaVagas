@@ -5,23 +5,23 @@ import java.util.TreeSet;
 
 public class Curriculum {
 
-	private HashMap<Integer, TreeSet<Course>> _curriculum = 
-			new HashMap<Integer, TreeSet<Course>>();
+	private HashMap<Integer, TreeSet<Class>> _curriculum = 
+			new HashMap<Integer, TreeSet<Class>>();
 	
-	private TreeSet<Course> _electives = new TreeSet<Course>();
+	private TreeSet<Class> _electives = new TreeSet<Class>();
 	
-	public void addMandatoryCourse(int semester, Course course) {
+	public void addMandatoryClass(int semester, Class _class) {
 		
-		TreeSet<Course> tree = this._curriculum.get(semester);
+		TreeSet<Class> tree = this._curriculum.get(semester);
 		if (tree == null) {
-			tree = new TreeSet<Course>();
+			tree = new TreeSet<Class>();
 			this._curriculum.put(semester, tree);
 		}
 		
-		tree.add(course);
+		tree.add(_class);
 	}
 	
-	public void addElectiveCourse(Course c) {
+	public void addElectiveClass(Class c) {
 		this._electives.add(c);
 	}
 	
@@ -29,22 +29,22 @@ public class Curriculum {
 		String out = "";
 		for (Integer semester : this._curriculum.keySet()) {
 			out += "semester " + semester + ":\n";
-			for (Course course : this._curriculum.get(semester)) {
-				out += course + "\n";
+			for (Class _class : this._curriculum.get(semester)) {
+				out += _class + "\n";
 			}
 		}
 	
-		for (Object course : this._electives.toArray()) 
-			out += "[elective] " + course + "\n";
+		for (Object _class : this._electives.toArray()) 
+			out += "[elective] " + _class + "\n";
 	
 		return out;
 	}
 	
-	public HashMap<Integer, TreeSet<Course>> getMandatories() {
+	public HashMap<Integer, TreeSet<Class>> getMandatories() {
 		return _curriculum;
 	}
 	
-	public TreeSet<Course> getElectives() {
+	public TreeSet<Class> getElectives() {
 		return _electives;
 	}
 	

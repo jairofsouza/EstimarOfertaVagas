@@ -1,5 +1,5 @@
 package br.ufjf.coordenacao.OfertaVagas.model;
 
-public enum CourseType {
+public enum ClassType {
 	MANDATORY, ELECTIVE
 }

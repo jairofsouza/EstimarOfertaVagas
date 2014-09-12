@@ -1,8 +1,6 @@
 package br.ufjf.coordenacao.OfertaVagas.model;
 
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 
 public class StudentsHistory {
 
@@ -10,7 +8,7 @@ public class StudentsHistory {
 	
 	public StudentsHistory() { }
 	
-	public void add(String id, String course, CourseStatus status) {
+	public void add(String id, String _class, ClassStatus status) {
 		
 		Student st = this._students.get(id);
 		
@@ -19,7 +17,7 @@ public class StudentsHistory {
 			this._students.put(id, st);
 		}
 		
-		st.addCourse(course, status);
+		st.addClass(_class, status);
 	}
 
 	public HashMap<String, Student> getStudents() {

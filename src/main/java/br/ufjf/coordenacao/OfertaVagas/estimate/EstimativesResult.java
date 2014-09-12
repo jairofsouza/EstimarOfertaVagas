@@ -2,7 +2,7 @@ package br.ufjf.coordenacao.OfertaVagas.estimate;
 
 import java.util.ArrayList;
 
-import br.ufjf.coordenacao.OfertaVagas.model.Course;
+import br.ufjf.coordenacao.OfertaVagas.model.Class;
 
 public class EstimativesResult {
 
@@ -11,7 +11,7 @@ public class EstimativesResult {
 	public EstimativesResult() {	}
 	
 	
-	public void addEstimative(Course c, int hasPreReq, int canPreReq, int enrolled) {
+	public void addEstimative(Class c, int hasPreReq, int canPreReq, int enrolled) {
 		this.estimatives.add(new Estimative(c.getId(), hasPreReq, canPreReq, enrolled));
 	}
 	
@@ -19,7 +19,7 @@ public class EstimativesResult {
 	public String toString() {
 		String out = "";
 		for (Estimative est : this.estimatives) {
-			out += est.getCourseId() + 
+			out += est.getClassId() + 
 					" = [" + est.getQtdHasAllPrereq() + 
 					", " + est.getQdtCanHaveAllPreq() + ", " + 
 					est.getQtdEnrolled() + "]\n";

@@ -16,11 +16,11 @@ public class CSVReport extends EstimativeReport {
 	public void generate(EstimativesResult result) throws IOException {
 		ArrayList<Estimative> estimatives = result.getEstimatives();
 		 
-		out.println("Course id; # has all prerequisites; # can complete all prerequisites; # enrolled; " +
+		out.println("Class id; # has all prerequisites; # can complete all prerequisites; # enrolled; " +
 				"# has all prerequisites and is expected to enroll; # expected to complete all reprequisites;" +
-				"# expected to not complete the course; expected to enroll in the next semester");
+				"# expected to not complete the class; expected to enroll in the next semester");
 		for (Estimative estimative : estimatives) {
-			out.println(estimative.getCourseId() + ";" 
+			out.println(estimative.getClassId() + ";" 
 					+ estimative.getQtdHasAllPrereq() + ";" 
 					+ estimative.getQdtCanHaveAllPreq() + ";" 
 					+ estimative.getQtdEnrolled() + ";"

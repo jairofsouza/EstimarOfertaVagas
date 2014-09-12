@@ -19,11 +19,11 @@ public class HTMLReport extends EstimativeReport {
 		
 		//TODO fazer uma p‡gina HTML mais interessante
 		out.print(printTopHtml());
-		out.println("<tr><td>Course id</td><td> # has all prerequisites</td><td> # can complete all prerequisites</td><td> # enrolled</td><td> " +
+		out.println("<tr><td>Class id</td><td> # has all prerequisites</td><td> # can complete all prerequisites</td><td> # enrolled</td><td> " +
 				"# has all prerequisites and is expected to enroll</td><td> # expected to complete all reprequisites</td><td>" +
-				"# expected to not complete the course</td><td> expected to enroll in the next semester</td></tr>");
+				"# expected to not complete the class</td><td> expected to enroll in the next semester</td></tr>");
 		for (Estimative estimative : estimatives) {
-			out.println("<tr font=\"Verdana\"><td>"+estimative.getCourseId() + "</td><td>" 
+			out.println("<tr font=\"Verdana\"><td>"+estimative.getClassId() + "</td><td>" 
 					+ estimative.getQtdHasAllPrereq() + "</td><td>" 
 					+ estimative.getQdtCanHaveAllPreq() + "</td><td>" 
 					+ estimative.getQtdEnrolled() + "</td><td>"

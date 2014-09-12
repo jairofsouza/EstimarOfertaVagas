@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.TreeSet;
 
-import br.ufjf.coordenacao.OfertaVagas.model.Course;
-import br.ufjf.coordenacao.OfertaVagas.model.CourseStatus;
+import br.ufjf.coordenacao.OfertaVagas.model.Class;
+import br.ufjf.coordenacao.OfertaVagas.model.ClassStatus;
 import br.ufjf.coordenacao.OfertaVagas.model.Curriculum;
 import br.ufjf.coordenacao.OfertaVagas.model.Student;
 import br.ufjf.coordenacao.OfertaVagas.model.StudentsHistory;
@@ -43,10 +43,10 @@ public class Estimator {
 
 		// Fazendo somente com disciplinas obrigatórias
 		this.result = new EstimativesResult();
-		HashMap<Integer, TreeSet<Course>> mantadories = this.curriculum.getMandatories();
+		HashMap<Integer, TreeSet<Class>> mantadories = this.curriculum.getMandatories();
 		Collection<Student> students = this.history.getStudents().values();
 		for (Integer semester : mantadories.keySet()) {
-			for (Course course : mantadories.get(semester)) {
+			for (Class _class : mantadories.get(semester)) {
 				int countCanEnroll = 0;
 				int countIsEnrolled = 0;
 				int countCompletePrereq = 0;
@@ -54,31 +54,31 @@ public class Estimator {
 				for(Student st : students) {
 					
 					// Se o aluno já passou na disciplina, não entra na contagem
-					if (st.getCourses(CourseStatus.APPROVED).contains(course))
+					if (st.getClasses(ClassStatus.APPROVED).contains(_class))
 						continue;
 					
 					// Se o aluno está fazendo a disciplina, não precisa checar pré-requisitos
-					if (st.getCourses(CourseStatus.ENROLLED).contains(course))
+					if (st.getClasses(ClassStatus.ENROLLED).contains(_class))
 						countIsEnrolled++;
 					
 					// Se o aluno não fez ou não está fazendo a disciplina, talvez ele possa fazer no próximo período
 					else {
 						int qtdPrereqCompleted = 0;
 						int qtdPrereqEnrolled = 0;
-						for(Course pre : course.getPrerequisite()) {
-							if (st.getCourses(CourseStatus.APPROVED).contains(pre)) 
+						for(Class pre : _class.getPrerequisite()) {
+							if (st.getClasses(ClassStatus.APPROVED).contains(pre)) 
 								qtdPrereqCompleted++;
 							
-							if (st.getCourses(CourseStatus.ENROLLED).contains(pre)) 
+							if (st.getClasses(ClassStatus.ENROLLED).contains(pre)) 
 								qtdPrereqEnrolled++;
 						}
 						
-						if(qtdPrereqCompleted == course.getPrerequisite().size()) countCompletePrereq++;
-						else if (qtdPrereqCompleted + qtdPrereqEnrolled == course.getPrerequisite().size())	countCanEnroll++;
+						if(qtdPrereqCompleted == _class.getPrerequisite().size()) countCompletePrereq++;
+						else if (qtdPrereqCompleted + qtdPrereqEnrolled == _class.getPrerequisite().size())	countCanEnroll++;
 					}
 					
 				}
-				result.addEstimative(course, countCompletePrereq, countCanEnroll, countIsEnrolled);
+				result.addEstimative(_class, countCompletePrereq, countCanEnroll, countIsEnrolled);
 			}
 		}
 

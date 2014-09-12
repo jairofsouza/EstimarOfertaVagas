@@ -1,6 +1,6 @@
 package br.ufjf.coordenacao.OfertaVagas.model;
 
-public enum CourseStatus {
+public enum ClassStatus {
      ENROLLED, 
      APPROVED
 }

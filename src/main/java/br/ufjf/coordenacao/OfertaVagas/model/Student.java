@@ -6,7 +6,7 @@ import java.util.TreeSet;
 public class Student {
 
 	
-	private HashMap<CourseStatus, TreeSet<Course>> courses = new HashMap<CourseStatus, TreeSet<Course>>();
+	private HashMap<ClassStatus, TreeSet<Class>> classes = new HashMap<ClassStatus, TreeSet<Class>>();
 	private String _id;
 	
 	public Student(String id) {
@@ -14,15 +14,15 @@ public class Student {
 	}
 	
 	
-	public void addCourse(String course, CourseStatus status) {
+	public void addClass(String _class, ClassStatus status) {
 		
 		// A linha abaixo é necessária por conta das equivalências de disciplinas
-		Course course2 = CourseFactory.getCourse(course);
+		Class _class2 = ClassFactory.getClass(_class);
 		
-		if (!this.courses.containsKey(status))
-			this.courses.put(status, new TreeSet<Course>());
+		if (!this.classes.containsKey(status))
+			this.classes.put(status, new TreeSet<Class>());
 		
-		this.courses.get(status).add(course2);
+		this.classes.get(status).add(_class2);
 	}
 	
 	public String getId() { return this._id; }
@@ -31,19 +31,19 @@ public class Student {
 	public String toString() {
 		String output = "Student " + this._id;
 
-		for (CourseStatus status : this.courses.keySet()) {
+		for (ClassStatus status : this.classes.keySet()) {
 			output += ", "+status.name()+"=";
-			for (Object string : this.courses.get(status).toArray()) 
+			for (Object string : this.classes.get(status).toArray()) 
 				output += "," + string;
 		}
 		return output;
 	}
 	
-	public TreeSet<Course> getCourses(CourseStatus cs) {
-		if (!this.courses.containsKey(cs))
-			this.courses.put(cs, new TreeSet<Course>());
+	public TreeSet<Class> getClasses(ClassStatus cs) {
+		if (!this.classes.containsKey(cs))
+			this.classes.put(cs, new TreeSet<Class>());
 
-		return courses.get(cs);
+		return classes.get(cs);
 	}
 	
 }

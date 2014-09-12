@@ -18,7 +18,7 @@ public class Estimative {
 	/**
 	 * C—digo da disciplina
 	 */
-	private String courseId;
+	private String classId;
 	
 	/**
 	 * Esse valor guarda quantos alunos est‹o matriculados atualmente nesta disciplina
@@ -31,8 +31,8 @@ public class Estimative {
 	 */
 	private int qtdTotal;
 	
-	public String getCourseId() {
-		return courseId;
+	public String getClassId() {
+		return classId;
 	}
 	public int getQtdEnrolled() {
 		return qtdEnrolled;
@@ -70,7 +70,7 @@ public class Estimative {
 	}
 	public Estimative(String c, int hasPrereq, int qdtCanHaveAllPreq, int isEnrolled) {
 		this.qtdHasAllPrereq = hasPrereq;
-		this.courseId = c;
+		this.classId = c;
 		this.qtdEnrolled = isEnrolled;
 		this.qdtCanHaveAllPreq = qdtCanHaveAllPreq;
 	}

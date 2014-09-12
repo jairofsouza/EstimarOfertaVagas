@@ -8,8 +8,8 @@ import java.io.Reader;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
-import br.ufjf.coordenacao.OfertaVagas.model.Course;
-import br.ufjf.coordenacao.OfertaVagas.model.CourseFactory;
+import br.ufjf.coordenacao.OfertaVagas.model.Class;
+import br.ufjf.coordenacao.OfertaVagas.model.ClassFactory;
 import br.ufjf.coordenacao.OfertaVagas.model.Curriculum;
 
 public class CSVCurriculumLoader implements ICurriculumLoader {
@@ -45,14 +45,14 @@ public class CSVCurriculumLoader implements ICurriculumLoader {
 		
 		for (CSVRecord record : mandatoryRecords) {
 		    String semester = record.get(0).trim(); //Periodo
-		    String course   = record.get(1).trim(); //Disciplina
+		    String _class   = record.get(1).trim(); //Disciplina
 		    
-		    Course c = CourseFactory.getCourse(course);
-		    this._cur.addMandatoryCourse(Integer.valueOf(semester), c);
+		    Class c = ClassFactory.getClass(_class);
+		    this._cur.addMandatoryClass(Integer.valueOf(semester), c);
 		    
 		    for (int i = 2; i < record.size(); i++) {
 		    	String prerequisite = record.get(i).trim(); //Pré-requisito
-		    	Course pre = CourseFactory.getCourse(prerequisite);
+		    	Class pre = ClassFactory.getClass(prerequisite);
 		    	c.addPrerequisite(pre);		    	
 		    }
 
@@ -65,12 +65,12 @@ public class CSVCurriculumLoader implements ICurriculumLoader {
 		Iterable<CSVRecord> electiveRecords = CSVFormat.EXCEL.parse(in);
 		
 		for (CSVRecord record : electiveRecords) {
-		    Course c = CourseFactory.getCourse(record.get(0).trim());
-		    this._cur.addElectiveCourse(c);
+		    Class c = ClassFactory.getClass(record.get(0).trim());
+		    this._cur.addElectiveClass(c);
 		    
 		    for (int i = 1; i < record.size(); i++) {
 		    	String prerequisite = record.get(i).trim(); //Pré-requisito
-		    	Course pre = CourseFactory.getCourse(prerequisite);
+		    	Class pre = ClassFactory.getClass(prerequisite);
 		    	c.addPrerequisite(pre);		    	
 		    }
 		}
@@ -86,21 +86,21 @@ public class CSVCurriculumLoader implements ICurriculumLoader {
 			String idDaGrade = record.get(0).trim();
 		    String idNaoDaGrade = record.get(1).trim();
 
-		    Course c = null;
-		    if(!CourseFactory.contains(idDaGrade) && CourseFactory.contains(idNaoDaGrade)) {
+		    Class c = null;
+		    if(!ClassFactory.contains(idDaGrade) && ClassFactory.contains(idNaoDaGrade)) {
 		    	String aux = idNaoDaGrade;
 		    	idNaoDaGrade = idDaGrade;
 		    	idDaGrade = aux;
 		    }
 		    
-		    else if(CourseFactory.contains(idDaGrade) && CourseFactory.contains(idNaoDaGrade))
+		    else if(ClassFactory.contains(idDaGrade) && ClassFactory.contains(idNaoDaGrade))
 			    throw new IOException("Equivalência de duas disciplinas já existentes na grade: " + idDaGrade + " <-> " + idNaoDaGrade);
 
-			else if(!CourseFactory.contains(idDaGrade) && !CourseFactory.contains(idNaoDaGrade))
+			else if(!ClassFactory.contains(idDaGrade) && !ClassFactory.contains(idNaoDaGrade))
 				throw new IOException("Equivalência de duas disciplinas não existentes na grade: " + idDaGrade + " <-> " + idNaoDaGrade);
 			   
-		    c = CourseFactory.getCourse(idDaGrade);
-		    CourseFactory.addCourse(idNaoDaGrade, c);
+		    c = ClassFactory.getClass(idDaGrade);
+		    ClassFactory.addClass(idNaoDaGrade, c);
 		}		    
 
 		in.close();

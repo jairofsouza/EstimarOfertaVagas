@@ -2,20 +2,20 @@ package br.ufjf.coordenacao.OfertaVagas.model;
 
 import java.util.ArrayList;
 
-public class Course implements Comparable<Course> {
+public class Class implements Comparable<Class> {
 
 	String id;
-	ArrayList<Course> prerequisite = new ArrayList<Course>();
+	ArrayList<Class> prerequisite = new ArrayList<Class>();
 	
-	public Course(String id) {
+	public Class(String id) {
 		this.id = id;
 	}
 	
-	public void addPrerequisite(Course c) {
+	public void addPrerequisite(Class c) {
 		this.prerequisite.add(c);
 	}
 
-	public ArrayList<Course> getPrerequisite() {
+	public ArrayList<Class> getPrerequisite() {
 		return this.prerequisite;
 	}
 	
@@ -26,14 +26,14 @@ public class Course implements Comparable<Course> {
 		String o = id;
 		if (!prerequisite.isEmpty()) {
 			o += " -> [pre  ";
-			for (Course course : prerequisite) o += course +",";
+			for (Class _class : prerequisite) o += _class +",";
 			o = o.substring(0,o.length()-1) + "]";
 		}
 		return o;
 	}
 
 	@Override
-	public int compareTo(Course o) {
+	public int compareTo(Class o) {
 		return o.getId().compareTo(id);
 	}
 	
