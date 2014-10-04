@@ -11,8 +11,8 @@ public class EstimativesResult {
 	public EstimativesResult() {	}
 	
 	
-	public void addEstimative(Class c, int hasPreReq, int canPreReq, int enrolled) {
-		this.estimatives.add(new Estimative(c.getId(), hasPreReq, canPreReq, enrolled));
+	public void addEstimative(Class c, int hasPreReq, int canPreReq, int enrolled, int reprovedGrade, int reprovedFrequency) {
+		this.estimatives.add(new Estimative(c.getId(), hasPreReq, canPreReq, enrolled, reprovedGrade, reprovedFrequency));
 	}
 	
 	@Override
@@ -21,19 +21,20 @@ public class EstimativesResult {
 		for (Estimative est : this.estimatives) {
 			out += est.getClassId() + 
 					" = [" + est.getQtdHasAllPrereq() + 
-					", " + est.getQdtCanHaveAllPreq() + ", " + 
+					", " + est.getQtdCanHaveAllPreq() + ", " + 
 					est.getQtdEnrolled() + "]\n";
 		}
 		return out;
 	}
 	
-	public EstimativesResult process(float w1, float w2, float w3) {
+	public EstimativesResult process(float w1, float w2, float w3, float w4, float w5) {
 		
 		for (Estimative est : this.estimatives) {
-			est.setQtdHasAllPrereqWeighted((int) Math.ceil(est.getQtdHasAllPrereq()*w1));
-			est.setQtdEnrolledWeighted((int)Math.ceil(est.getQtdEnrolled()*w2));
-			est.setQdtCanHaveAllPreqWeighted((int)Math.ceil(est.getQdtCanHaveAllPreq()*w3));
-			est.setQtdTotal(est.getQdtCanHaveAllPreqWeighted()+est.getQtdEnrolledWeighted()+est.getQtdHasAllPrereqWeighted());
+			est.setQtdHasAllPrereqWeight(w1);
+			est.setQtdEnrolledWeight(w2);
+			est.setQtdCanHaveAllPreqWeight(w3);
+			est.setQtdReprovedFreqWeight(w4);
+			est.setQtdReprovedGradeWeight(w5);
 		}
 		
 		return this;

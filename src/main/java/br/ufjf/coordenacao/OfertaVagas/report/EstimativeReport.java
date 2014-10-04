@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 
 import br.ufjf.coordenacao.OfertaVagas.estimate.EstimativesResult;
+import br.ufjf.coordenacao.OfertaVagas.model.Curriculum;
+import br.ufjf.coordenacao.OfertaVagas.model.StudentsHistory;
 
 public abstract class EstimativeReport {
 
@@ -13,7 +15,7 @@ public abstract class EstimativeReport {
 		this.out = out;
 	}
 	
-	public void abgenerate(EstimativesResult result) throws IOException { }
+	public void generate(EstimativesResult result, StudentsHistory sh, Curriculum cur) throws IOException { }
 
 
 }

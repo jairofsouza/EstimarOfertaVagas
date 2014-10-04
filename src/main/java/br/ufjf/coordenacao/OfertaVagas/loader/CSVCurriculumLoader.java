@@ -97,7 +97,7 @@ public class CSVCurriculumLoader implements ICurriculumLoader {
 			    throw new IOException("Equivalência de duas disciplinas já existentes na grade: " + idDaGrade + " <-> " + idNaoDaGrade);
 
 			else if(!ClassFactory.contains(idDaGrade) && !ClassFactory.contains(idNaoDaGrade))
-				throw new IOException("Equivalência de duas disciplinas não existentes na grade: " + idDaGrade + " <-> " + idNaoDaGrade);
+				System.out.println("Equivalência de duas disciplinas não existentes na grade: " + idDaGrade + " <-> " + idNaoDaGrade);
 			   
 		    c = ClassFactory.getClass(idDaGrade);
 		    ClassFactory.addClass(idNaoDaGrade, c);

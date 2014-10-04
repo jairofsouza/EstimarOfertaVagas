@@ -6,14 +6,14 @@ public class Estimative {
 	 * Esse valor guarda quantos alunos possuem todos os pré-requisitos para a disciplina
 	 */
 	private int qtdHasAllPrereq;
-	private int qtdHasAllPrereqWeighted;
+	private float qtdHasAllPrereqWeight;
 	
 	/**
 	 * Esse valor guarda quantos alunos podem, ao final do período, ter todos os pré-requisitos para a disciplina
 	 * Ou seja, o aluno está cursando ainda algum pré-requisito
 	 */
-	private int qdtCanHaveAllPreq;
-	private int qdtCanHaveAllPreqWeighted;
+	private int qtdCanHaveAllPreq;
+	private float qtdCanHaveAllPreqWeight;
 
 	/**
 	 * Código da disciplina
@@ -24,13 +24,48 @@ public class Estimative {
 	 * Esse valor guarda quantos alunos estão matriculados atualmente nesta disciplina
 	 */
 	private int qtdEnrolled;
-	private int qtdEnrolledWeighted;
+	private float qtdEnrolledWeight;
 	
+	public int getQtdTotalWeighted() {
+		return getQtdCanHaveAllPreqWeighted()+
+				getQtdEnrolledWeighted()+
+				getQtdHasAllPrereqWeighted()+
+				getQtdReprovedGradeWeighted()+
+				getQtdReprovedFreqWeighted();
+	}
+
 	/**
-	 * Aqui está o total de vagas necessárias
+	 * Esses valores guardam quantos alunos podem fazer a disciplina mas foram reprovados nela
 	 */
-	private int qtdTotal;
+	private int qtdReprovedGrade;
+	private int qtdReprovedFreq;
+	private float qtdReprovedGradeWeight;
+	private float qtdReprovedFreqWeight;
 	
+	public int getQtdReprovedGradeWeighted() {
+		return (int) Math.ceil(qtdReprovedGradeWeight*qtdReprovedGrade);
+	}
+	public float getQtdReprovedGradeWeight() {
+		return qtdReprovedGradeWeight;
+	}
+	public void setQtdReprovedGradeWeight(float qtdReprovedGradeWeight) {
+		this.qtdReprovedGradeWeight = qtdReprovedGradeWeight;
+	}
+	public int getQtdReprovedFreqWeighted() {
+		return (int) Math.ceil(qtdReprovedFreqWeight*qtdReprovedFreq);
+	}
+	public float getQtdReprovedFreqWeight() {
+		return qtdReprovedFreqWeight;
+	}
+	public void setQtdReprovedFreqWeight(float qtdReprovedFreqWeight) {
+		this.qtdReprovedFreqWeight = qtdReprovedFreqWeight;
+	}
+	public int getQtdReprovedGrade() {
+		return qtdReprovedGrade;
+	}
+	public int getQtdReprovedFreq() {
+		return qtdReprovedFreq;
+	}
 	public String getClassId() {
 		return classId;
 	}
@@ -40,39 +75,53 @@ public class Estimative {
 	public int getQtdHasAllPrereq() {
 		return qtdHasAllPrereq;
 	}
-	public int getQdtCanHaveAllPreq() {
-		return qdtCanHaveAllPreq;
+	public int getQtdCanHaveAllPreq() {
+		return qtdCanHaveAllPreq;
 	}
 
 	public int getQtdHasAllPrereqWeighted() {
-		return qtdHasAllPrereqWeighted;
+		return (int) Math.ceil(qtdHasAllPrereqWeight*qtdHasAllPrereq);
 	}
-	public void setQtdHasAllPrereqWeighted(int qtdHasAllPrereqWeighted) {
-		this.qtdHasAllPrereqWeighted = qtdHasAllPrereqWeighted;
+	public float getQtdHasAllPrereqWeight() {
+		return qtdHasAllPrereqWeight;
 	}
-	public int getQdtCanHaveAllPreqWeighted() {
-		return qdtCanHaveAllPreqWeighted;
+	public void setQtdHasAllPrereqWeight(float qtdHasAllPrereqWeighted) {
+		this.qtdHasAllPrereqWeight = qtdHasAllPrereqWeighted;
 	}
-	public void setQdtCanHaveAllPreqWeighted(int qdtCanHaveAllPreqWeighted) {
-		this.qdtCanHaveAllPreqWeighted = qdtCanHaveAllPreqWeighted;
+	public int getQtdCanHaveAllPreqWeighted() {
+		return (int) Math.ceil(qtdCanHaveAllPreq*qtdCanHaveAllPreqWeight);
+	}
+	public float getQtdCanHaveAllPreqWeight() {
+		return qtdCanHaveAllPreqWeight;
+	}
+	public void setQtdCanHaveAllPreqWeight(float qdtCanHaveAllPreqWeighted) {
+		this.qtdCanHaveAllPreqWeight = qdtCanHaveAllPreqWeighted;
 	}
 	public int getQtdEnrolledWeighted() {
-		return qtdEnrolledWeighted;
+		return (int) Math.ceil(qtdEnrolledWeight*qtdEnrolled);
 	}
-	public void setQtdEnrolledWeighted(int qtdEnrolledWeighted) {
-		this.qtdEnrolledWeighted = qtdEnrolledWeighted;
+	public float getQtdEnrolledWeight() {
+		return qtdEnrolledWeight;
+	}
+	public void setQtdEnrolledWeight(float qtdEnrolledWeighted) {
+		this.qtdEnrolledWeight = qtdEnrolledWeighted;
 	}
 	public int getQtdTotal() {
-		return qtdTotal;
+		return getQtdCanHaveAllPreq()+
+				getQtdEnrolled()+
+				getQtdHasAllPrereq()+
+				getQtdReprovedFreq()+
+				getQtdReprovedGrade();
 	}
-	public void setQtdTotal(int qtdTotal) {
-		this.qtdTotal = qtdTotal;
-	}
-	public Estimative(String c, int hasPrereq, int qdtCanHaveAllPreq, int isEnrolled) {
+
+	public Estimative(String c, int hasPrereq, int qdtCanHaveAllPreq, int isEnrolled, int reprovG, int reprovF) {
 		this.qtdHasAllPrereq = hasPrereq;
 		this.classId = c;
 		this.qtdEnrolled = isEnrolled;
-		this.qdtCanHaveAllPreq = qdtCanHaveAllPreq;
+		this.qtdCanHaveAllPreq = qdtCanHaveAllPreq;
+		this.qtdReprovedGrade = reprovG;
+		this.qtdReprovedFreq = reprovF;
 	}
+
 	
 }

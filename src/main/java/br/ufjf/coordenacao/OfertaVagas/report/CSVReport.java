@@ -22,10 +22,10 @@ public class CSVReport extends EstimativeReport {
 		for (Estimative estimative : estimatives) {
 			out.println(estimative.getClassId() + ";" 
 					+ estimative.getQtdHasAllPrereq() + ";" 
-					+ estimative.getQdtCanHaveAllPreq() + ";" 
+					+ estimative.getQtdCanHaveAllPreq() + ";" 
 					+ estimative.getQtdEnrolled() + ";"
 					+ estimative.getQtdHasAllPrereqWeighted() + ";"
-					+ estimative.getQdtCanHaveAllPreqWeighted() + ";"
+					+ estimative.getQtdCanHaveAllPreqWeighted() + ";"
 					+ estimative.getQtdEnrolledWeighted() + ";"
 					+estimative.getQtdTotal());
 		}

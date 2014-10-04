@@ -8,7 +8,7 @@ public class StudentsHistory {
 	
 	public StudentsHistory() { }
 	
-	public void add(String id, String _class, ClassStatus status) {
+	public void add(String id, String semester, String _class, ClassStatus status) {
 		
 		Student st = this._students.get(id);
 		
@@ -17,7 +17,7 @@ public class StudentsHistory {
 			this._students.put(id, st);
 		}
 		
-		st.addClass(_class, status);
+		st.addClass(_class, semester, status);
 	}
 
 	public HashMap<String, Student> getStudents() {

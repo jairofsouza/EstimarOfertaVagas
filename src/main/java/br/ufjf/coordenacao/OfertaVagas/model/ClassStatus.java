@@ -2,5 +2,9 @@ package br.ufjf.coordenacao.OfertaVagas.model;
 
 public enum ClassStatus {
      ENROLLED, 
-     APPROVED
+     APPROVED,
+     REPROVED_GRADE,
+     REPROVED_FREQUENCY,
+     CAN_ENROLL,
+     PERHAPS_CAN_ENROLL_NEXT_SEMESTER
 }

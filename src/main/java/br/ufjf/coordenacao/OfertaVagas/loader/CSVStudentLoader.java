@@ -11,6 +11,13 @@ import org.apache.commons.csv.CSVRecord;
 import br.ufjf.coordenacao.OfertaVagas.model.ClassStatus;
 import br.ufjf.coordenacao.OfertaVagas.model.StudentsHistory;
 
+
+
+/**
+ * ƒ pre-requisito aqui que o arquivo de entrada esteja ordenado por semestre (ou seja, semestres antigos devem aparecer primeiro que semestres mais atuais)
+ * @author Jairo
+ *
+ */
 public class CSVStudentLoader implements IStudentLoader {
 
 	private File _file;
@@ -28,14 +35,17 @@ public class CSVStudentLoader implements IStudentLoader {
 		ClassStatus status;
 		
 		for (CSVRecord record : records) {
-		    String classStatus = record.get(6).trim(); //Aprovado ou cursando
+		    String classStatus = record.get(6).trim();
 		    
 		    if (classStatus.equals("Matriculado")) status = ClassStatus.ENROLLED;
 		    else if (classStatus.equals("Aprovado") || classStatus.equals("Dispensado")) status = ClassStatus.APPROVED;
+		    else if (classStatus.equals("Rep Nota")) status = ClassStatus.REPROVED_GRADE;
+		    else if (classStatus.equals("Rep Freq")) status = ClassStatus.REPROVED_FREQUENCY;
 		    else continue; // do nothing
 		    	
 		    this.add(sh,
 		    		record.get(1).trim(), // matricula 
+		    		record.get(3).trim(), // semestre cursado
 		    		record.get(4).trim(), // disciplina
 		    		status // cursando ou aprovado
 		    	);
@@ -44,8 +54,8 @@ public class CSVStudentLoader implements IStudentLoader {
 		return sh;
 	}
 
-	private void add(StudentsHistory sh, String id, String _class, ClassStatus status) {
-    	sh.add(id, _class, status);
+	private void add(StudentsHistory sh, String id, String semester, String _class, ClassStatus status) {
+    	sh.add(id, semester, _class, status);
 	}
 	
 }
