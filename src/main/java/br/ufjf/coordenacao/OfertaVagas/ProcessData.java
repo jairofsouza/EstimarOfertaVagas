@@ -38,7 +38,7 @@ public class ProcessData {
 //		System.out.println(sh);
 
 		Estimator estimator = new Estimator(c, sh);
-		EstimativesResult result = estimator.populateData().process(0.9f, 0.7f, 0.7f, 0.8f, 0.5f);
+		EstimativesResult result = estimator.populateData().process(0.9f, 0.6f, 0.7f, 0.8f, 0.5f);
 
 		File file = new File("data/resultado76A_"+Calendar.getInstance().getTimeInMillis()+".html");
 		file.createNewFile();

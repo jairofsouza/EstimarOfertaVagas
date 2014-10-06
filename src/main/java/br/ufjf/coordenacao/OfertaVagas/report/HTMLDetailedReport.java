@@ -24,7 +24,7 @@ public class HTMLDetailedReport extends EstimativeReport {
 		super(out);
 		
 		color.put(ClassStatus.APPROVED, "#0B2161");
-		color.put(ClassStatus.ENROLLED, "#0000FF");
+		color.put(ClassStatus.ENROLLED, "#7777FF");
 		color.put(ClassStatus.CAN_ENROLL, "#04B431");
 		color.put(ClassStatus.PERHAPS_CAN_ENROLL_NEXT_SEMESTER, "#00FFBF");
 		color.put(ClassStatus.REPROVED_FREQUENCY, "red");
@@ -39,6 +39,7 @@ public class HTMLDetailedReport extends EstimativeReport {
 		ArrayList<Class> classes = printTableHeader(cur);
 		printTableBody(classes, sh);
 		printTableFooter(classes, result, sh.getStudents().keySet().size());
+		printTableHeader(cur); // repetindo o cabeçalho no rodapé para facilitar a leitura da tabela...
 		out.println("</table></body>");
 		out.print("</html>");
 	}
@@ -72,8 +73,6 @@ public class HTMLDetailedReport extends EstimativeReport {
 		printTableFooterHelper(classes, result, "%Habilitados");
 		printTableFooterHelper(classes, result, "%Quase habilit.");
 		printTableFooterHelper(classes, result, "%Necess. bruta");
-		
-		
 	}
 
 
