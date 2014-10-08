@@ -93,6 +93,7 @@ public class CSVCurriculumLoader implements ICurriculumLoader {
 		    	idDaGrade = aux;
 		    }
 		    
+		    //TODO há um erro abaixo. Se já tem 2 disciplinas, tem que ver qual é a obrigatória/eletiva, caso contrário se apareceu 2x a equivalência, então dá erro. Ex: MAT114->MAT157 e MAT114->MAT156
 		    else if(ClassFactory.contains(idDaGrade) && ClassFactory.contains(idNaoDaGrade))
 			    throw new IOException("Equivalência de duas disciplinas já existentes na grade: " + idDaGrade + " <-> " + idNaoDaGrade);
 

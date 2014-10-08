@@ -35,7 +35,7 @@ public class CSVStudentLoader implements IStudentLoader {
 		ClassStatus status;
 		
 		for (CSVRecord record : records) {
-		    String classStatus = record.get(6).trim();
+		    String classStatus = record.get(7).trim();
 		    
 		    if (classStatus.equals("Matriculado")) status = ClassStatus.ENROLLED;
 		    else if (classStatus.equals("Aprovado") || classStatus.equals("Dispensado")) status = ClassStatus.APPROVED;
@@ -45,8 +45,8 @@ public class CSVStudentLoader implements IStudentLoader {
 		    	
 		    this.add(sh,
 		    		record.get(1).trim(), // matricula 
-		    		record.get(3).trim(), // semestre cursado
-		    		record.get(4).trim(), // disciplina
+		    		record.get(4).trim(), // semestre cursado
+		    		record.get(5).trim(), // disciplina
 		    		status // cursando ou aprovado
 		    	);
 		}

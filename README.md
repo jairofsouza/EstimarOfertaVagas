@@ -10,6 +10,9 @@ instalar maven3 e executar mvn install no diretório raiz do projeto.
 
 ## Para executar
 
+Primeiro é necessário baixar o histórico de todos os alunos através da classe br.ufjf.coordenacao.OfertaVagas.GetStudentData. Para rodar essa classe, é necessário ter o token de acesso ao web service. Com o token em mãos, crie um arquivo application.token no root do projeto com o token fornecido. A classe br.ufjf.coordenacao.OfertaVagas.GetStudentData não necessita de parâmetros.
+
+
 A classe br.ufjf.coordenacao.OfertaVagas.ProcessData é a principal do projeto. No método main() há um exemplo de chamada.
 São necessários os seguintes inputs:
 * arquivo csv com o histórico de todos os alunos do curso [obrigatório]
@@ -20,4 +23,5 @@ São necessários os seguintes inputs:
 #### Observação
 
 * no diretório data estão arquivos de exemplo com a grade do curso de sistema de informação
-* o suporte do instituto tem gerado os arquivos csv com dados dos alunos. Contudo, já foi combinado que eles irão criar um serviço web e o sistema se encarregará de fazer a carga desses dados automaticamente.
+* coordenadores têm direito de baixar os dados de alunos somente do curso que coordena. Chefes de departamento podem baixar de alunos de todos os cursos que o departamento possui disciplina na grade.
+
