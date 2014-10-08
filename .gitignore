@@ -8,6 +8,7 @@
 
 # Package Files #
 *.jar
+!IntegraAPI-1.0.jar
 *.war
 *.ear
 
