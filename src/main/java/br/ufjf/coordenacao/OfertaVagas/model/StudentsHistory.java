@@ -8,12 +8,13 @@ public class StudentsHistory {
 	
 	public StudentsHistory() { }
 	
-	public void add(String id, String semester, String _class, ClassStatus status) {
+	public void add(String id, String nome, String semester, String _class, ClassStatus status) {
 		
 		Student st = this._students.get(id);
 		
 		if (st == null) {
 			st = new Student(id);
+			st.setNome(nome);
 			this._students.put(id, st);
 		}
 		

@@ -91,7 +91,7 @@ public class HTMLDetailedReport extends EstimativeReport {
 		else if (info.equals("%Quase habilit.")) color = this.color.get(ClassStatus.PERHAPS_CAN_ENROLL_NEXT_SEMESTER);
 
 		out.print("<tr>");
-		out.print("<td colspan=4><b>"+info+"<b></td>");
+		out.print("<td colspan=16><b>"+info+"<b></td>");
 		for (Class c1 : classes) {
 			for (Estimative estimative : result.getEstimatives()) {
 				if (estimative.getClassId().equals(c1.getId())) {
@@ -127,6 +127,7 @@ public class HTMLDetailedReport extends EstimativeReport {
 		for (String stid : student) {
 			out.print("<tr>");
 			out.print("<td colspan=4>"+stid+"</td>");
+			out.print("<td colspan=12>"+sh.getStudents().get(stid).getNome()+"</td>");
 			Student st = sh.getStudents().get(stid);
 
 			for (Class c1 : classes) {
@@ -206,7 +207,12 @@ public class HTMLDetailedReport extends EstimativeReport {
 		Class[] teste = { };
 		ArrayList<Class> classes = new ArrayList<Class>();
 
+		//4 celulas para a matr’cula
 		out.print("<tr><td></td><td></td><td></td><td></td>");
+
+		//12 celulas para o nome
+		out.print("<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>");
+		
 		//Imprimindo obrigat—rias
 		for (Integer sem : semester) {
 			String color = pos ? "#A9E2F3" : "#CEECF5" ; 

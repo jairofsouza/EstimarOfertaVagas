@@ -8,11 +8,24 @@ public class Student {
 	
 	private HashMap<ClassStatus, HashMap<Class, ArrayList<String>>> classes = new HashMap<ClassStatus, HashMap<Class, ArrayList<String>>>();
 	private String _id;
+	private String _nome;
 	
+	public String getNome() {
+		return _nome;
+	}
+
+	public void setNome(String _nome) {
+		this._nome = _nome;
+	}
+
 	public Student(String id) {
 		this._id = id;
 	}
 	
+	public Student(String id, String nome) {
+		this._id = id;
+		this._nome = nome;
+	}
 	
 	public void addClass(String _class, String semester, ClassStatus status) {
 		

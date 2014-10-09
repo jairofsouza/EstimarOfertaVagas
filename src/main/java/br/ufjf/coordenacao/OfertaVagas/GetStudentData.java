@@ -11,6 +11,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.Scanner;
 
+import javax.ws.rs.NotAuthorizedException;
+
 import br.ufjf.ice.integra3.rs.restclient.RSCursoAlunosDiscSituacao;
 import br.ufjf.ice.integra3.rs.restclient.model.AlunoCurso;
 import br.ufjf.ice.integra3.rs.restclient.model.CursoAlunosSituacaoResponse;
@@ -79,6 +81,10 @@ public class GetStudentData {
             System.out.println("Finalizado");
 			
 			
+		} catch (NotAuthorizedException e) {
+			//Impress‹o de erros
+			System.out.println("ERRO: usu‡rio sem permiss‹o");
+			e.printStackTrace();
 		} catch (WsException_Exception e) {
 			//Impress‹o de erros
 			System.out.println(e.getMessage());

@@ -24,11 +24,11 @@ public class ProcessData {
 		//TODO receber esses argumentos da função principal
 		CSVCurriculumLoader csvcur = new CSVCurriculumLoader(
 				new File("data/35A_grade_obrigatorias_2009.txt"),
-				null, //new File("data/35A_grade_eletivas.txt"),
+				new File("data/35A_eletivas_2009.txt"),
 				new File("data/35A_equivalencias.txt"));
 		Curriculum c = csvcur.getCurriculum();
 		
-		CSVStudentLoader csv = new CSVStudentLoader(new File("data/dados_alunos_35A1412774769327.csv"));
+		CSVStudentLoader csv = new CSVStudentLoader(new File("data/35A_alunos_2009.csv"));
 		StudentsHistory sh = csv.getStudentsHistory();
 
 		Estimator estimator = new Estimator(c, sh);
