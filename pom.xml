@@ -35,7 +35,7 @@
        <artifactId>integraAPI</artifactId>  
        <version>1.0</version> 
       <scope>system</scope>
-      <systemPath>${project.basedir}/lib/integraAPI-1.0.jar</systemPath>
+      <systemPath>${project.basedir}/lib/IntegraAPI-1.0.jar</systemPath>
    </dependency>
   </dependencies>
 </project>
