@@ -16,17 +16,27 @@ public class CursoAlunosSituacaoResponse implements Serializable
 	 */
 	private static final long serialVersionUID = 8701304217730511286L;
 	private List<AlunoCurso> alunosList;
+	private String responseStatus;
     
     public CursoAlunosSituacaoResponse()
     {
         
     }
     
-    public CursoAlunosSituacaoResponse(List<AlunoCurso> alunosCursoList)
+    public CursoAlunosSituacaoResponse(List<AlunoCurso> alunosCursoList, String responseStatus)
     {
         this.alunosList = alunosCursoList;
+        this.responseStatus = responseStatus;
     }
 
+    public String getResponseStatus() {
+		return responseStatus;
+	}
+    
+    public void setResponseStatus(String responseStatus) {
+		this.responseStatus = responseStatus;
+	}
+    
     /**
      * @return the alunosList
      */

@@ -11,8 +11,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.Scanner;
 
-import javax.ws.rs.NotAuthorizedException;
-
 import br.ufjf.ice.integra3.rs.restclient.RSCursoAlunosDiscSituacao;
 import br.ufjf.ice.integra3.rs.restclient.model.AlunoCurso;
 import br.ufjf.ice.integra3.rs.restclient.model.CursoAlunosSituacaoResponse;
@@ -59,6 +57,8 @@ public class GetStudentData {
             RSCursoAlunosDiscSituacao rsClient = new RSCursoAlunosDiscSituacao(user.getToken());
             
             CursoAlunosSituacaoResponse rsResponse = rsClient.get(codigo);
+            if (rsResponse.getResponseStatus() != null) 
+    			throw new Exception (rsResponse.getResponseStatus());
 
             String filename = "data/dados_alunos_"+codigo+Calendar.getInstance().getTimeInMillis()+".csv";
             System.out.println("Criando o arquivo "+filename);
@@ -81,16 +81,16 @@ public class GetStudentData {
             System.out.println("Finalizado");
 			
 			
-		} catch (NotAuthorizedException e) {
-			//Impress‹o de erros
-			System.out.println("ERRO: usu‡rio sem permiss‹o");
-			e.printStackTrace();
 		} catch (WsException_Exception e) {
 			//Impress‹o de erros
 			System.out.println(e.getMessage());
 			System.out.println(e.getFaultInfo().getErrorUserMessage());
+		} catch (Exception e) {
+			//Impress‹o de erros
+			System.out.println("ERRO: usu‡rio sem permiss‹o");
+			e.printStackTrace();
 		}
-
+		
 		bf.close();
 		file.close();
 		
