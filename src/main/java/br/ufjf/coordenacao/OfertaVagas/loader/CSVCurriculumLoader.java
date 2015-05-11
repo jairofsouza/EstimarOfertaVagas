@@ -18,13 +18,24 @@ public class CSVCurriculumLoader implements ICurriculumLoader {
 	private File _electiveFile;
 	private File _equivalenceFile;
 	Curriculum _cur;
+	private boolean _multiple;  
+	
+	public CSVCurriculumLoader(File mandatoryFile, File electiveFile, File equivalenceFile, boolean multiple) {
+		this._mandatoryFile = mandatoryFile;
+		this._electiveFile = electiveFile;
+		this._equivalenceFile = equivalenceFile;
+				
+		this._cur = new Curriculum();
+		this._multiple = multiple;
+	}
 	
 	public CSVCurriculumLoader(File mandatoryFile, File electiveFile, File equivalenceFile) {
 		this._mandatoryFile = mandatoryFile;
 		this._electiveFile = electiveFile;
 		this._equivalenceFile = equivalenceFile;
-		
+				
 		this._cur = new Curriculum();
+		this._multiple = false;
 	}
 	
 	public Curriculum getCurriculum() throws IOException {
@@ -44,9 +55,14 @@ public class CSVCurriculumLoader implements ICurriculumLoader {
 		Iterable<CSVRecord> mandatoryRecords = CSVFormat.EXCEL.parse(in);
 		
 		for (CSVRecord record : mandatoryRecords) {
-		    String semester = record.get(0).trim(); //Periodo
+			String semester; //Periodo
+			if(this._multiple)
+				semester = "1";
+			else
+				semester = record.get(0).trim();
+			
 		    String _class   = record.get(1).trim(); //Disciplina
-		    
+		    		    		    
 		    Class c = ClassFactory.getClass(_class);
 		    this._cur.addMandatoryClass(Integer.valueOf(semester), c);
 		    
@@ -95,8 +111,9 @@ public class CSVCurriculumLoader implements ICurriculumLoader {
 		    
 		    //TODO há um erro abaixo. Se já tem 2 disciplinas, tem que ver qual é a obrigatória/eletiva, caso contrário se apareceu 2x a equivalência, então dá erro. Ex: MAT114->MAT157 e MAT114->MAT156
 		    else if(ClassFactory.contains(idDaGrade) && ClassFactory.contains(idNaoDaGrade))
-			    throw new IOException("Equivalência de duas disciplinas já existentes na grade: " + idDaGrade + " <-> " + idNaoDaGrade);
-
+			    //throw new IOException("Equivalência de duas disciplinas já existentes na grade: " + idDaGrade + " <-> " + idNaoDaGrade);
+		    	System.out.println("Equivalência de duas disciplinas já existentes na grade: " + idDaGrade + " <-> " + idNaoDaGrade);
+		    	
 			else if(!ClassFactory.contains(idDaGrade) && !ClassFactory.contains(idNaoDaGrade))
 				System.out.println("Equivalência de duas disciplinas não existentes na grade: " + idDaGrade + " <-> " + idNaoDaGrade);
 			   

@@ -21,10 +21,18 @@ public class Curriculum {
 		tree.add(_class);
 	}
 	
+	public Curriculum() { }
+	public Curriculum(TreeSet<Class> mandatories, TreeSet<Class> electives)
+	{
+		this._curriculum.put(1, mandatories);
+		this._electives = electives;
+	}
+	
 	public void addElectiveClass(Class c) {
 		this._electives.add(c);
 	}
 	
+	@Override
 	public String toString() {
 		String out = "";
 		for (Integer semester : this._curriculum.keySet()) {
@@ -47,6 +55,4 @@ public class Curriculum {
 	public TreeSet<Class> getElectives() {
 		return _electives;
 	}
-	
-	
 }

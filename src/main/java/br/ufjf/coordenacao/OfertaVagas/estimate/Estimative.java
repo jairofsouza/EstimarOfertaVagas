@@ -122,6 +122,26 @@ public class Estimative {
 		this.qtdReprovedGrade = reprovG;
 		this.qtdReprovedFreq = reprovF;
 	}
-
+	
+	public String toString()
+	{
+		String estimative = getClassId() + ": "
+						+ getQtdCanHaveAllPreq() + " "
+						+ getQtdEnrolled() + " "
+						+ getQtdHasAllPrereq() + " "
+						+ getQtdReprovedFreq() + " "
+						+ getQtdReprovedGrade();
+		
+		return estimative;
+	}
+	
+	public void updateEstimative(int hasPrereq, int isEnrolled, int qdtCanHaveAllPreq, int reprovG, int reprovF)
+	{
+		this.qtdHasAllPrereq = hasPrereq;
+		this.qtdEnrolled = isEnrolled;
+		this.qtdCanHaveAllPreq = qdtCanHaveAllPreq;
+		this.qtdReprovedGrade = reprovG;
+		this.qtdReprovedFreq = reprovF;
+	}
 	
 }

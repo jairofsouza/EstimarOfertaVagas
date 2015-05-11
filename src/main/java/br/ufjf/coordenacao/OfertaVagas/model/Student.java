@@ -3,12 +3,13 @@ package br.ufjf.coordenacao.OfertaVagas.model;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Student {
+public class Student implements Comparable<Student>{
 
 	
 	private HashMap<ClassStatus, HashMap<Class, ArrayList<String>>> classes = new HashMap<ClassStatus, HashMap<Class, ArrayList<String>>>();
 	private String _id;
 	private String _nome;
+	private String _curriculum;
 	
 	public String getNome() {
 		return _nome;
@@ -18,6 +19,14 @@ public class Student {
 		this._nome = _nome;
 	}
 
+	public String getCurriculum() {
+		return _curriculum;
+	}
+
+	public void setCurriculum(String curriculum) {
+		this._curriculum = curriculum;
+	}
+	
 	public Student(String id) {
 		this._id = id;
 	}
@@ -64,5 +73,11 @@ public class Student {
 
 		return classes.get(cs);
 	}
-	
+
+	@Override
+	public int compareTo(Student s)
+	{
+		return s._id.compareTo(this._id);
+	}
+		
 }
