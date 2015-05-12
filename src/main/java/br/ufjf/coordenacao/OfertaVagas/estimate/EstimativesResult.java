@@ -9,10 +9,14 @@ public class EstimativesResult {
 	private ArrayList<Estimative> estimatives = new ArrayList<Estimative>();
 	
 	public EstimativesResult() {	}
-	
-	
+		
 	public void addEstimative(Class c, int hasPreReq, int canPreReq, int enrolled, int reprovedGrade, int reprovedFrequency) {
 		this.estimatives.add(new Estimative(c.getId(), hasPreReq, canPreReq, enrolled, reprovedGrade, reprovedFrequency));
+	}
+	
+	public void addEstimative(Estimative e)
+	{
+		this.estimatives.add(e);
 	}
 	
 	@Override

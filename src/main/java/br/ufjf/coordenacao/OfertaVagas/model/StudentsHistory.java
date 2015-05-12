@@ -6,15 +6,21 @@ public class StudentsHistory {
 
 	private HashMap<String, Student> _students = new HashMap<String, Student>();
 	
-	public StudentsHistory() { }
+	public StudentsHistory() {}
 	
-	public void add(String id, String nome, String semester, String _class, ClassStatus status) {
+	public StudentsHistory(HashMap<String, Student> students)
+	{
+		this._students = students;
+	}
+	
+	public void add(String id, String nome, String curriculum, String semester, String _class, ClassStatus status) {
 		
 		Student st = this._students.get(id);
 		
 		if (st == null) {
 			st = new Student(id);
 			st.setNome(nome);
+			st.setCurriculum(curriculum);
 			this._students.put(id, st);
 		}
 		
