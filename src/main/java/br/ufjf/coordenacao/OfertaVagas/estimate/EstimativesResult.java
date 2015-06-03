@@ -18,7 +18,7 @@ public class EstimativesResult {
 	{
 		this.estimatives.add(e);
 	}
-	
+	 
 	@Override
 	public String toString() {
 		String out = "";
@@ -45,7 +45,7 @@ public class EstimativesResult {
 	}
 	
 	public ArrayList<Estimative> getEstimatives() {
-		return estimatives;
+		return this.estimatives;
 	}
 	
 }

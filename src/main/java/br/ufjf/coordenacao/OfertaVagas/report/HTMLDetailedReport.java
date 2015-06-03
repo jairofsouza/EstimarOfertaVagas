@@ -89,7 +89,7 @@ public class HTMLDetailedReport extends EstimativeReport {
 		else if (info.equals("%Repr. freq")) color = this.color.get(ClassStatus.REPROVED_FREQUENCY);
 		else if (info.equals("%Habilitados")) color = this.color.get(ClassStatus.CAN_ENROLL);
 		else if (info.equals("%Quase habilit.")) color = this.color.get(ClassStatus.PERHAPS_CAN_ENROLL_NEXT_SEMESTER);
-
+		
 		out.print("<tr>");
 		out.print("<td colspan=16><b>"+info+"<b></td>");
 		for (Class c1 : classes) {

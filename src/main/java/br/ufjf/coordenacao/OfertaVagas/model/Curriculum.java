@@ -55,4 +55,26 @@ public class Curriculum {
 	public TreeSet<Class> getElectives() {
 		return _electives;
 	}
+	
+	public TreeSet<Class> getMandatoriesBySemester(int n)
+	{
+		return _curriculum.get(n);
+	}
+	
+	public Curriculum getCurriculumForMultiples()
+	{
+		Curriculum c = new Curriculum();
+		
+		c._electives = this._electives;
+		
+		TreeSet<Class> mandatories = new TreeSet<Class>();
+		for(TreeSet<Class> classes: this._curriculum.values())
+		{
+			mandatories.addAll(classes);
+		}
+		
+		c._curriculum = new HashMap<Integer,TreeSet<Class>>();
+		c._curriculum.put(1,mandatories);
+		return c;
+	}
 }

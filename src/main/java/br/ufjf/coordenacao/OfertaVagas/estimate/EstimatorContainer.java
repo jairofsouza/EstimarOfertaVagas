@@ -3,92 +3,39 @@ package br.ufjf.coordenacao.OfertaVagas.estimate;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Iterator;
-import java.util.Map.Entry;
 import java.util.TreeSet;
-
+import java.util.Map.Entry;
 
 import br.ufjf.coordenacao.OfertaVagas.model.Class;
 import br.ufjf.coordenacao.OfertaVagas.model.Curriculum;
+import br.ufjf.coordenacao.OfertaVagas.model.Student;
 import br.ufjf.coordenacao.OfertaVagas.model.StudentsHistory;
 
 public class EstimatorContainer {
-	private List<Curriculum> _listCurriculum; // Guarda uma List com curriculum
-												// recebidos na costrucao
-	private StudentsHistory _sh; // Guarda o S. History recebido na construcao
-	private List<EstimativesResult> _er; // Lista de cada EstimativeResult
-											// gerado a partir de cada
-											// _listCurriculum
-	private EstimativesResult _joinedER; // Resultado final de todos os
-											// EstimativesResult de _er com os
-											// resultados somados
-	private HashMap<String, Estimative> listEstimative; // HashMap com indice
-														// String:
-														// CodDisciplina, e
-														// valor Estimative da
-														// disciplina
-	
+	private ArrayList<EstimatorContainerSource> _ecs;
+	private HashMap<String, EstimativesResult> _listER;
+	private HashMap<String, Estimative> _result;
 	private TreeSet<Class> _mandatories;
 	private TreeSet<Class> _electives;
 	private Curriculum _joinedCurriculum;
 	
-	public EstimatorContainer(List<Curriculum> c, StudentsHistory sh) {
-		this._listCurriculum = c;
-		this._sh = sh;
-		this._er = new ArrayList<EstimativesResult>();
-		this._joinedER = new EstimativesResult();
-		this.listEstimative = new HashMap<String, Estimative>();
-		
-		this._mandatories = new TreeSet<Class>();
-		this._electives = new TreeSet<Class>();
-	}
-
-	// Ira processar cada curriculo e gerar um resultado que sera guardado na
-	// lista de estimativas
-	public void process() throws IOException {
-		for (Curriculum c : _listCurriculum) {
-			Estimator estimator = new Estimator(c, _sh);
-
-			EstimativesResult result = estimator.populateData().process(0.9f,
-					0.6f, 0.7f, 0.8f, 0.5f);
-
-			_er.add(result);
-		}
-	}
-
-	// Junta todos os estimativeResult(de _er) em um HashMap (listEstimative)
-	private void joinResult() {
-		for (EstimativesResult er : _er) {
-			ArrayList<Estimative> estimative = er.getEstimatives();
-
-			/*
-			 * if (listEstimative.size() == 0) { // Se tiver vazio, adiciona
-			 * todos sem verificar;
-			 * 
-			 * for(Estimative e: estimative) {
-			 * listEstimative.put(e.getClassId(), e); } }
-			 */
-			// else {
-			/*
-			 * Senao, verifica o que ja tem guardado. Se a estimativa que
-			 * estiver sendo analisada ja existir, pega-se os dados que existem
-			 * e soma com os atuais para gerar uma nova, que substituira a
-			 * antiga
-			 */
-			for (Estimative e : estimative) 
+	private void process() throws IOException
+	{
+		for(EstimatorContainerSource ecs: this._ecs)
+		{		
+			Estimator estimator = new Estimator(ecs.getCurriculumForMultiple(), ecs.getSh());
+			EstimativesResult result = estimator.populateData().process(0.9f, 0.6f, 0.7f, 0.8f, 0.5f);
+			this._listER.put(ecs.getCurriculumId(), result);
+			
+			ArrayList<Estimative> estimatives = result.getEstimatives();
+			for(Estimative e: estimatives)
 			{
 				String ClassId = e.getClassId();
-				
-				//Mostra informacao sobre a estimativa atual.
-				System.out.println("[INFO] Processando " + ClassId);
-				System.out.println("[INFO] Estimativas para " + e + " (verificando se ja existe)");
-				
-				if (listEstimative.containsKey(ClassId)) 
+				if(this._result.containsKey(ClassId))
 				{
-					System.out.printf("[INFO] " + ClassId + " ja existe.");
-					Estimative existent = listEstimative.get(ClassId);
-
+					Estimative existent = this._result.get(ClassId);
+					
 					int hasPrereq = existent.getQtdHasAllPrereq()
 							+ e.getQtdHasAllPrereq();
 					int qdtCanHaveAllPreq = existent.getQtdCanHaveAllPreq()
@@ -99,48 +46,38 @@ public class EstimatorContainer {
 							+ e.getQtdReprovedGrade();
 					int reprovF = existent.getQtdReprovedFreq()
 							+ e.getQtdReprovedFreq();
-								
-					Estimative est = new Estimative(ClassId, hasPrereq, qdtCanHaveAllPreq,
-							isEnrolled, reprovG, reprovF);
-
-					// TODO FIX::Pesos definidos como estaticos
-
-					est.setQtdHasAllPrereqWeight(0.9f);
-					est.setQtdEnrolledWeight(0.6f);
-					est.setQtdCanHaveAllPreqWeight(0.7f);
-					est.setQtdReprovedFreqWeight(0.8f);
-					est.setQtdReprovedGradeWeight(0.5f);
-
-					listEstimative.put(ClassId, est);
-					System.out.println(" Alterado " + e + " para" + listEstimative.get(ClassId));
 					
-					}
-				 else {
-					listEstimative.put(ClassId, e);
-					System.out.println("[INFO] Adicionado " + listEstimative.get(ClassId));
-					
+					e.updateEstimative(hasPrereq, isEnrolled, qdtCanHaveAllPreq, reprovG, reprovF);
 				}
-				// }
-			}
-
-			// Apos adicionar todas as disciplinas e somar as que ja existem, os
-			// valores de listEstimatives serao adicionados em um
-			// EstimativesResul
-			Iterator<Entry<String, Estimative>> it = listEstimative.entrySet()
-					.iterator();
-			while (it.hasNext()) {
-				Entry<String, Estimative> entry = it.next();
-
-				Estimative e = entry.getValue();
-				_joinedER.addEstimative(e);
+				
+				this._result.put(ClassId, e);
 			}
 		}
-		}
-
-	public void joinCurriculum() {
-		for(Curriculum c: this._listCurriculum)
+	}
+	
+	public EstimativesResult getResult() throws IOException
+	{
+		this.process();
+		
+		EstimativesResult er = new EstimativesResult();
+		
+		Iterator<Entry<String, Estimative>> it = this._result.entrySet().iterator();
+		while(it.hasNext())
 		{
+			Entry<String, Estimative> e = it.next();
+			er.addEstimative(e.getValue());
+		}
+		
+		return er;
+	}
+	
+	public void joinCurriculum() throws IOException{
+		for(EstimatorContainerSource ecl: this._ecs)
+		{
+			Curriculum c = ecl.getCurriculumForMultiple();
+			
 			TreeSet<Class> mandatories = c.getMandatories().get(1);
+
 			TreeSet<Class> electives = c.getElectives();
 			
 			for(Class cl: mandatories)
@@ -157,33 +94,57 @@ public class EstimatorContainer {
 				if(!this._mandatories.contains(cl) && !this._electives.contains(cl))
 					this._electives.add(cl);
 			}
-						
 		}
 		
 		this._joinedCurriculum = new Curriculum(this._mandatories, this._electives);
 	}
-	public EstimativesResult getEstimatives() throws IOException{
-
-		// TODO tratar a IOException quando processa os multiplos resultados
-		//System.out.println("Ocorreu um erro. " + e.getMessage());
-
-		System.out.println("Iniciando processo.");
-		this.process();
-
-		System.out.println("Juntando resultados...");
-		this.joinResult();
-		this.joinCurriculum();
-		
-		return _joinedER;
-	}
 	
 	public Curriculum getCurriculum()
 	{
-		if(this._joinedCurriculum == null)
-			joinCurriculum();
+			try {
+				joinCurriculum();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		
 		return this._joinedCurriculum;
 	}
-
+	
+	public StudentsHistory getStudentsHistory()
+	{
+		HashMap<String, Student> sh = new HashMap<String, Student>();
+		
+		for(EstimatorContainerSource ecl :this._ecs)
+		{
+			sh.putAll(ecl.getSh().getStudents());
+		}
+		
+		return new StudentsHistory(sh);
+	}
+	
+	public EstimativesResult getResultByCurriculum(String curriculum)
+	{	
+		return this._listER.get(curriculum);
+	}
+	
+	public Curriculum getCurriculum(String curriculum)
+	{
+		for(EstimatorContainerSource source :this._ecs)
+		{
+			if(source.getCurriculumId().equals(curriculum))
+				 return source.getCurriculum();
+		}
+		
+		return null;
+	}
+	
+	public EstimatorContainer(ArrayList<EstimatorContainerSource> ecs)
+	{
+		this._ecs = ecs;
+		this._result = new HashMap<String, Estimative>();
+		this._mandatories = new TreeSet<Class>();
+		this._electives = new TreeSet<Class>();
+		this._listER = new HashMap<String, EstimativesResult>();
+	}
 }
-
