@@ -12,7 +12,7 @@ import br.ufjf.coordenacao.OfertaVagas.estimate.EstimatorContainer;
 import br.ufjf.coordenacao.OfertaVagas.estimate.EstimatorContainerSource;
 import br.ufjf.coordenacao.OfertaVagas.loader.CSVCurriculumLoader;
 import br.ufjf.coordenacao.OfertaVagas.loader.CSVStudentLoader;
-import br.ufjf.coordenacao.OfertaVagas.loader.CurriculumFilter;
+import br.ufjf.coordenacao.OfertaVagas.loader.StudentGradeFilter;
 import br.ufjf.coordenacao.OfertaVagas.model.StudentsHistory;
 import br.ufjf.coordenacao.OfertaVagas.report.HTMLDetailedReport;
 
@@ -63,14 +63,14 @@ public class MultiplasGrades {
 			 * dos alunos e um parametro String que define um filtro de grade, onde somente
 			 * os estudantes pertencentes aquela grade sao carregados.
 			 */
-			CSVStudentLoader st1 = new CSVStudentLoader(new File("data/35A_alunos_2014.csv"), new CurriculumFilter("12014"));
+			CSVStudentLoader st1 = new CSVStudentLoader(new File("data/35A_alunos_2014.csv"), new StudentGradeFilter("12014"));
 			StudentsHistory sh1 = st1.getStudentsHistory();
 			
 						
-			CSVStudentLoader st2 = new CSVStudentLoader(new File("data/35A_alunos_2014.csv"), new CurriculumFilter("22004"));
+			CSVStudentLoader st2 = new CSVStudentLoader(new File("data/35A_alunos_2014.csv"), new StudentGradeFilter("22004"));
 			StudentsHistory sh2 = st2.getStudentsHistory();
 						
-			CSVStudentLoader st3 = new CSVStudentLoader(new File("data/35A_alunos_2014.csv"), new CurriculumFilter("12009"));
+			CSVStudentLoader st3 = new CSVStudentLoader(new File("data/35A_alunos_2014.csv"), new StudentGradeFilter("12009"));
 			StudentsHistory sh3 = st3.getStudentsHistory();
 			
 			/*

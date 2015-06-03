@@ -51,8 +51,8 @@ public class CSVCurriculumLoader implements ICurriculumLoader {
 		}
 
 		catch (Exception e) {
-			System.out.println("Erro: " + e.getMessage());
-			System.exit(1);
+			e.printStackTrace();
+			//System.exit(1);
 		}
 		return this._cur;
 

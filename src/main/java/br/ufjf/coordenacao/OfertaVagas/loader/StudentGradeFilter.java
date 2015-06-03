@@ -6,7 +6,7 @@ public class StudentGradeFilter implements IFilter {
 	
 	String _grade;
 	
-	StudentGradeFilter(String Class)
+	public StudentGradeFilter(String Class)
 	{
 		this._grade = Class;
 	}

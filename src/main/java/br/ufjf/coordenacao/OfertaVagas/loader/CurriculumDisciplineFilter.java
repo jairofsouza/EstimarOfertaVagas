@@ -8,14 +8,15 @@ public class CurriculumDisciplineFilter implements IFilter{
 
 	private ArrayList<String> _disciplines;
 	
-	CurriculumDisciplineFilter(ArrayList<String> disciplines)
+	public CurriculumDisciplineFilter(ArrayList<String> disciplines)
 	{
 		this._disciplines = disciplines; 
 	}
 	
 	public boolean check(CSVRecord record)
 	{
-		return (this._disciplines.contains(record.get(1)));
+		int index = (record.size() > 1 ? 1 : 0);
+		return (this._disciplines.contains(record.get(index).trim()));
 	}
 	
 }
