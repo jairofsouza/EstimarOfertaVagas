@@ -18,7 +18,7 @@ public class RSCursoAlunosDiscSituacao
     public RSCursoAlunosDiscSituacao(String authToken)
     {
         this.rsClient = WebClient.create(BASE_URL);
-        this.rsClient.header("IntegraToken", authToken); // Adiciono cabeçalho de autenticação
+        this.rsClient.header("IntegraToken", authToken); // Adiciono cabecalho de autenticação
     }
     
     public CursoAlunosSituacaoResponse get(String curso)

@@ -1,4 +1,6 @@
+
 package br.ufjf.coordenacao.OfertaVagas.loader;
+
 
 import java.io.File;
 import java.io.FileReader;
@@ -11,8 +13,6 @@ import org.apache.commons.csv.CSVRecord;
 import br.ufjf.coordenacao.OfertaVagas.model.ClassStatus;
 import br.ufjf.coordenacao.OfertaVagas.model.StudentsHistory;
 
-
-
 /**
  * ƒ pre-requisito aqui que o arquivo de entrada esteja ordenado por semestre (ou seja, semestres antigos devem aparecer primeiro que semestres mais atuais)
  * @author Jairo
@@ -21,15 +21,15 @@ import br.ufjf.coordenacao.OfertaVagas.model.StudentsHistory;
 public class CSVStudentLoader implements IStudentLoader {
 
 	private File _file;
-	private String _curriculumid;
+	private IFilter _filter;
 	
-	public CSVStudentLoader(File CSVfile, String curriculum) {
+	public CSVStudentLoader(File CSVfile, IFilter filter) {
 		this._file = CSVfile;
-		this._curriculumid = curriculum;
+		this._filter = filter;
 	}
+	
 	public CSVStudentLoader(File CSVfile) {
-		this._file = CSVfile;
-		this._curriculumid = null;
+		this(CSVfile, new NoFilter());	
 	}
 	
 	public StudentsHistory getStudentsHistory() throws IOException {
@@ -42,7 +42,7 @@ public class CSVStudentLoader implements IStudentLoader {
 		
 		for (CSVRecord record : records) {
 			//Verifica de o aluno e do curriculo analisado, se nao for entao ele e pulado.
-			if(!record.get(3).trim().equals(this._curriculumid) && this._curriculumid != null)
+			if(!this._filter.check(record))
 				continue;
 			
 		    String classStatus = record.get(7).trim();
@@ -64,14 +64,6 @@ public class CSVStudentLoader implements IStudentLoader {
 		}
 		
 		return sh;
-	}
-	
-	public void setCurriculumId(String curriculum) {
-		this._curriculumid = curriculum;
-	}
-	
-	public String getCurriculumid() {
-		return this._curriculumid;
 	}
 	
 	private void add(StudentsHistory sh, String id, String nome, String curriculum, String semester, String _class, ClassStatus status) {
