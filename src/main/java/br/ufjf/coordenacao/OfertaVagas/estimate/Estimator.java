@@ -112,11 +112,11 @@ public class Estimator {
 		// Se o aluno já foi reprovado por nota ou infrequencia na disciplina, então ele pode fazê-la novamente
 		else if (student.getClasses(ClassStatus.REPROVED_GRADE).containsKey(discipline) || student.getClasses(ClassStatus.REPROVED_FREQUENCY).containsKey(discipline)) {
 		    						
-			ArrayList<String> array1 = student.getClasses(ClassStatus.REPROVED_GRADE).get(discipline);
-			String s1 = array1 != null ? array1.get(array1.size()-1) : "";
+			ArrayList<String[]> array1 = student.getClasses(ClassStatus.REPROVED_GRADE).get(discipline);
+			String s1 = (array1 != null ? array1.get(array1.size()-1)[0] : "");
 			
-			ArrayList<String> array2 = student.getClasses(ClassStatus.REPROVED_FREQUENCY).get(discipline);
-			String s2 = array2 != null ? array2.get(array2.size()-1) : "";
+			ArrayList<String[]> array2 = student.getClasses(ClassStatus.REPROVED_FREQUENCY).get(discipline);
+			String s2 = (String) (array2 != null ? array2.get(array2.size()-1)[0] : "");
 				
 			// compara qual o maior semestre
 			if (s1.compareTo(s2) > 1) retorno = 2;
