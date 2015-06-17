@@ -35,7 +35,7 @@ public class Student implements Comparable<Student>{
 		this._nome = nome;
 	}
 	
-	public void addClass(String _class, String semester, ClassStatus status, String grade) {
+	public void addClass(String _class, String semester, ClassStatus status, String grade, String weight) {
 		
 		// A linha abaixo é necessária por conta das equivalências de disciplinas
 		Class _class2 = ClassFactory.getClass(_class);
@@ -48,10 +48,13 @@ public class Student implements Comparable<Student>{
 			a = new ArrayList<String[]>();
 		}
 		
+		//Adiciona os creditos da disciplina
+		_class2.setWeight(Integer.valueOf(weight));
+		
 		String[] o = new String[2];
 		
-		o[0] = semester;
-		o[1] = grade;
+		o[0] = semester;//adiciona o semestre cursado
+		o[1] = grade; //adiciona a nota da disciplina
 		a.add(o);
 		this.classes.get(status).put(_class2, a);
 	}

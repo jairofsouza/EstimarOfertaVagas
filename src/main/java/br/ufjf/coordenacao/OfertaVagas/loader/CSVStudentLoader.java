@@ -59,7 +59,8 @@ public class CSVStudentLoader implements IStudentLoader {
 		    		record.get(3).trim(), // curriculo
 		    		record.get(4).trim(), // semestre cursado
 		    		record.get(5).trim(), // disciplina
-		    		record.get(6).trim(), // nota da disciplina 
+		    		record.get(6).trim(), // nota da disciplina
+		    		"6", //TODO ler os creditos da disciplina do arquivo de alunos
 		    		status // cursando ou aprovado
 		    	);
 		}
@@ -67,8 +68,8 @@ public class CSVStudentLoader implements IStudentLoader {
 		return sh;
 	}
 	
-	private void add(StudentsHistory sh, String id, String nome, String curriculum, String semester, String _class, String grade, ClassStatus status) {
-    	sh.add(id, nome, curriculum, semester, _class, status, grade);
+	private void add(StudentsHistory sh, String id, String nome, String curriculum, String semester, String _class, String grade, String weight,  ClassStatus status) {
+    	sh.add(id, nome, curriculum, semester, _class, status, grade, weight);
 	}
 	
 }
