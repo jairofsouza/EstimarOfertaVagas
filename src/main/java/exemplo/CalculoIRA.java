@@ -12,7 +12,7 @@ public class CalculoIRA {
 	/*
 	 * Classe de exemplo que mostra como obter o IRA de um aluno.
 	 * ƒ possivel obter o IRA total do aluno, o de um semestre especifico ou
-	 * o de um intervalo especifico
+	 * das disciplinas de um semestre
 	 */
 	public static void main(String[] args) throws IOException
 	{
@@ -26,6 +26,7 @@ public class CalculoIRA {
 		float ira1 = st.getIRA(); //Obtem o IRA total do aluno
 		float ira2 = st.getIRA(20131); //Obtem o IRA do aluno em um semestre (todas as disciplinas cursadas do 1o ate o semestre informado) (20131)
 		float ira3 = st.getSemesterIRA(20103); //Obtem o IRA do aluno com apenas as disciplinas que ele cursou naquele semestre (20103)
+		
 		System.out.println("ALUNO: " + st.getId() + "\n-IRA total:" + ira1 + "\t-IRA em 20131: " + ira2 + "\t-IRA das disc. de 20103: " + ira3);
 	}
 }
