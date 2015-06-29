@@ -99,6 +99,10 @@ public class Student implements Comparable<Student>{
 			}
 
 		}
+		
+		if(weight == 0)
+			return 0;
+		
 		return (float) grade / weight;
 	}
 	

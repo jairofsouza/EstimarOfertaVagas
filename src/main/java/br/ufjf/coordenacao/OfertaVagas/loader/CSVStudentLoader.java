@@ -60,7 +60,7 @@ public class CSVStudentLoader implements IStudentLoader {
 		    		record.get(4).trim(), // semestre cursado
 		    		record.get(5).trim(), // disciplina
 		    		record.get(6).trim(), // nota da disciplina
-		    		record.get(8).trim(), //TODO ler os creditos da disciplina do arquivo de alunos
+		    		record.get(8).trim(), // creditos da disciplina
 		    		status // cursando ou aprovado
 		    	);
 		}
