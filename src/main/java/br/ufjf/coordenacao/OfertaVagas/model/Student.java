@@ -1,7 +1,10 @@
 package br.ufjf.coordenacao.OfertaVagas.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+import java.util.TreeSet;
 
 public class Student implements Comparable<Student>{
 
@@ -9,7 +12,7 @@ public class Student implements Comparable<Student>{
 	private String _id;
 	private String _nome;
 	private String _curriculum;
-	private int _firstSemester;
+	private TreeSet<Integer> _coursedSemesters;
 	
 	public String getNome() {
 		return _nome;
@@ -28,18 +31,17 @@ public class Student implements Comparable<Student>{
 	}
 	
 	public Student(String id) {
-		this._id = id;
-		this._firstSemester = 0;
+		this(id, "");
 	}
 	
 	public Student(String id, String nome) {
 		this._id = id;
 		this._nome = nome;
-		this._firstSemester = 0;
+		this._coursedSemesters = new TreeSet<Integer>();
 	}
 	
 	public float getIRA() { return IRA(0, 99999); }
-	public float getIRA(int semester) { return IRA(this._firstSemester, semester); }
+	public float getIRA(int semester) { return IRA(this._coursedSemesters.first(), semester); }
 	public float getSemesterIRA(int semester) { return IRA(semester, semester); }
 	
 	private float IRA(int firstSemester, int lastSemester)
@@ -51,11 +53,15 @@ public class Student implements Comparable<Student>{
 		cl = this.classes.get(ClassStatus.APPROVED);
 		if(cl != null) for(Class c: cl.keySet())
 		{
+			String[] exceptions = {"APR", "DISP", "A", "B", "C", "D", "E"};
+			List<String> Exceptions = Arrays.asList(exceptions);
+			
 			ArrayList<String[]> classdata = cl.get(c);
 			for(String[] s2: classdata)
 			{
 				//TODO verificar excecoes do calculo - #3 (A a E)
-				if(s2[1].equals("APR") || s2[1].equals("DISP") || s2[1].equals("A"))
+				
+				if(Exceptions.contains(s2[1]))
 					continue;
 
 				//Verifica se o semestre esta dentro do intervalo definido
@@ -108,7 +114,7 @@ public class Student implements Comparable<Student>{
 	
 	public void addClass(String _class, String semester, ClassStatus status, String grade, String weight) {
 		
-		// A linha abaixo é necessária por conta das equivalências de disciplinas
+		// A linha abaixo  necess‚Ä°ria por conta das equivalncias de disciplinas
 		Class _class2 = ClassFactory.getClass(_class);
 		
 		if (!this.classes.containsKey(status))
@@ -129,15 +135,12 @@ public class Student implements Comparable<Student>{
 		a.add(o);
 		this.classes.get(status).put(_class2, a);
 		
-		int sem = Integer.valueOf(semester);
-		
-		if(sem < this._firstSemester || this._firstSemester == 0)
-			this._firstSemester = sem;
+		this._coursedSemesters.add(Integer.valueOf(semester));
 	}
 	
 	public String getId() { return this._id; }
 	
-	public int getFirstSemester() { return this._firstSemester; }
+	public int getFirstSemester() { return this._coursedSemesters.first(); }
 	
 	@Override
 	public String toString() {
@@ -157,6 +160,11 @@ public class Student implements Comparable<Student>{
 			this.classes.put(cs, new HashMap<Class, ArrayList<String[]>>());
 
 		return classes.get(cs);
+	}
+	
+	public TreeSet<Integer> getCoursedSemesters()
+	{
+		return this._coursedSemesters;
 	}
 		
 	@Override
