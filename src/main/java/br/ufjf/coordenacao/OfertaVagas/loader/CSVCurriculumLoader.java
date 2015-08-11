@@ -17,7 +17,7 @@ public class CSVCurriculumLoader implements ICurriculumLoader {
 	private File _mandatoryFile;
 	private File _electiveFile;
 	private File _equivalenceFile;
-	Curriculum _cur;
+	private Curriculum _cur;
 	private boolean _multiple;
 	private IFilter _filter;
 

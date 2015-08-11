@@ -6,9 +6,16 @@ public class Class implements Comparable<Class> {
 
 	String id;
 	ArrayList<Class> prerequisite = new ArrayList<Class>();
+	private int weight;
+	
+	public Class(String id, int weight)
+	{
+		this.id = id;
+		this.weight = weight;
+	}
 	
 	public Class(String id) {
-		this.id = id;
+		this(id, 4);
 	}
 	
 	public void addPrerequisite(Class c) {
@@ -21,9 +28,13 @@ public class Class implements Comparable<Class> {
 	
 	public String getId() { return id; }
 	
+	public int getWeight() { return this.weight; }
+	public void setWeight(int weight) { this.weight = weight; }
+	
+	
 	@Override
 	public String toString() {
-		String o = id;
+		String o = id + "(" + weight + ")";
 		if (!prerequisite.isEmpty()) {
 			o += " -> [pre  ";
 			for (Class _class : prerequisite) o += _class +",";
