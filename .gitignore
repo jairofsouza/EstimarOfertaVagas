@@ -21,4 +21,4 @@ pom.properties
 *target*
 
 #
-data/*
+data/*.html
