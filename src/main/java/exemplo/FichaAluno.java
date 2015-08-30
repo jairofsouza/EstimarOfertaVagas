@@ -26,6 +26,11 @@ public class FichaAluno {
 		
 		Student st = sh.getStudents().get("267913344");
 		
+		if(!new File("data/result/").exists())
+		{
+			new File("data/result/").mkdirs();
+		}
+		
 		File file =  new File("data/result/Ficha_" + st.getId() + "_"+ System.currentTimeMillis() + ".html");
 		file.createNewFile();
 		PrintStream ps = new PrintStream(file); 

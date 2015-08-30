@@ -33,7 +33,12 @@ public class ProcessData {
 
 		Estimator estimator = new Estimator(c, sh);
 		EstimativesResult result = estimator.populateData().process(0.9f, 0.6f, 0.7f, 0.8f, 0.5f);
-
+		
+		if(!new File("data/result/").exists())
+		{
+			new File("data/result/").mkdirs();
+		}
+		
 		File file = new File("data/result/resultado35A_2009_"+Calendar.getInstance().getTimeInMillis()+".html");
 		file.createNewFile();
 		PrintStream ps = new PrintStream(file); 

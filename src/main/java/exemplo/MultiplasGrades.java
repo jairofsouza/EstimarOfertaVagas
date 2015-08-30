@@ -94,6 +94,11 @@ public class MultiplasGrades {
 			EstimatorContainer ec = new EstimatorContainer(list);
 			EstimativesResult er = ec.getResult();
 			
+			if(!new File("data/result/").exists())
+			{
+				new File("data/result/").mkdirs();
+			}
+			
 			File file = new File("data/result/resultado35A_"+Calendar.getInstance().getTimeInMillis()+".html");
 			file.createNewFile();
 			PrintStream ps = new PrintStream(file); 
