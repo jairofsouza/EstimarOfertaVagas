@@ -26,9 +26,8 @@ public class planoCurso {
 
 		Student st = sh.getStudents().get("268180042,7");
 
-		StudentCoursePlan g = new StudentCoursePlan(st, c, 20);
+		StudentCoursePlan g = new StudentCoursePlan(st, c, 300);
 		Curriculum cur = g.generate();
-
 
 		for(int i : cur.getMandatories().keySet())
 		{
@@ -41,5 +40,6 @@ public class planoCurso {
 
 		}
 
+		System.out.println("\n---------");
 	}
 }
