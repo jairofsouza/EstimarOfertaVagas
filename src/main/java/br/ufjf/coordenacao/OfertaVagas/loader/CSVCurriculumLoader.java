@@ -86,11 +86,13 @@ public class CSVCurriculumLoader implements ICurriculumLoader {
 			Class c = ClassFactory.getClass(_class);
 			this._cur.addMandatoryClass(Integer.valueOf(semester), c);
 
-			for (int i = 2; i < record.size(); i++) {
+			for (int i = 2; i < record.size()-1; i++) {
 				String prerequisite = record.get(i).trim(); // PrŽ-requisito
 				Class pre = ClassFactory.getClass(prerequisite);
 				c.addPrerequisite(pre);
 			}
+			
+			c.setWorkload(Integer.valueOf(record.get(record.size()-1).trim()));
 
 
 		}
@@ -107,11 +109,13 @@ public class CSVCurriculumLoader implements ICurriculumLoader {
 				Class c = ClassFactory.getClass(record.get(0).trim());
 				this._cur.addElectiveClass(c);
 
-				for (int i = 1; i < record.size(); i++) {
+				for (int i = 1; i < record.size()-1; i++) {
 					String prerequisite = record.get(i).trim(); // PrŽ-requisito
 					Class pre = ClassFactory.getClass(prerequisite);
 					c.addPrerequisite(pre);
 				}
+				
+				c.setWorkload(Integer.valueOf(record.get(record.size()-1).trim()));
 			}
 		}
 		in.close();
