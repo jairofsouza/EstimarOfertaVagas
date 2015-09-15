@@ -68,8 +68,8 @@ public class Student implements Comparable<Student>{
 				if(Integer.valueOf(s2[0]) < firstSemester || Integer.valueOf(s2[0]) > lastSemester)
 					continue;
 
-				grade += Integer.valueOf(s2[1]) * c.getWeight();
-				weight += c.getWeight();
+				grade += Integer.valueOf(s2[1]) * c.getWorkload();
+				weight += c.getWorkload();
 			}
 		}
 
@@ -87,8 +87,8 @@ public class Student implements Comparable<Student>{
 				if(Integer.valueOf(s2[0]) < firstSemester || Integer.valueOf(s2[0]) > lastSemester)
 					continue;
 
-				grade += Integer.valueOf(s2[1]) * c.getWeight();
-				weight += c.getWeight();
+				grade += Integer.valueOf(s2[1]) * c.getWorkload();
+				weight += c.getWorkload();
 			}
 		}
 
@@ -101,7 +101,7 @@ public class Student implements Comparable<Student>{
 				if(Integer.valueOf(s2[0]) < firstSemester || Integer.valueOf(s2[0]) > lastSemester)
 					continue;
 
-				weight += c.getWeight();
+				weight += c.getWorkload();
 			}
 
 		}
@@ -124,9 +124,6 @@ public class Student implements Comparable<Student>{
 		if(a == null) {
 			a = new ArrayList<String[]>();
 		}
-		
-		//Adiciona os creditos da disciplina
-		_class2.setWeight(Integer.valueOf(weight));
 		
 		String[] o = new String[2]; //Array que guarda as informacoes de cada vez que o aluno fez a disciplina (Semestre, Disciplina...)
 		

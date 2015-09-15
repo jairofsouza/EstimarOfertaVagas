@@ -11,10 +11,13 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.Scanner;
 
+import javax.ws.rs.NotAuthorizedException;
+
 import br.ufjf.ice.integra3.rs.restclient.RSCursoAlunosDiscSituacao;
-import br.ufjf.ice.integra3.rs.restclient.model.AlunoCurso;
-import br.ufjf.ice.integra3.rs.restclient.model.CursoAlunosSituacaoResponse;
-import br.ufjf.ice.integra3.rs.restclient.model.Disciplina;
+import br.ufjf.ice.integra3.rs.restclient.RSCursoAlunosDiscSituacao.ServiceVersion;
+import br.ufjf.ice.integra3.rs.restclient.model.v2.AlunoCurso;
+import br.ufjf.ice.integra3.rs.restclient.model.v2.CursoAlunosSituacaoResponse;
+import br.ufjf.ice.integra3.rs.restclient.model.v2.Disciplina;
 import br.ufjf.ice.integra3.ws.login.interfaces.IWsLogin;
 import br.ufjf.ice.integra3.ws.login.interfaces.WsException_Exception;
 import br.ufjf.ice.integra3.ws.login.interfaces.WsLoginResponse;
@@ -34,7 +37,7 @@ public class GetStudentData {
 		String token = bf.readLine();
 		Scanner sc = new Scanner(System.in);
 
-		System.out.print("Código do curso: ");
+		System.out.print("CÔøΩdigo do curso: ");
 		String codigo = sc.next();
 
 		System.out.print("User: ");
@@ -49,14 +52,16 @@ public class GetStudentData {
 			IWsLogin integra = new WSLogin().getWsLoginServicePort();
 			WsLoginResponse user = integra.login(login, pwd, token);
 
-//			WsUserInfoResponse infos = integra.getUserInformation(user.getToken()); // Pegando informações
+//			WsUserInfoResponse infos = integra.getUserInformation(user.getToken()); // Pegando informaÔøΩÔøΩes
 //			System.out.println(infos.getCpf()); // Cpf
 //			System.out.println(infos.getEmail()); // Email
 
 			System.out.println("Recuperando dados do curso "+codigo+"...");
-            RSCursoAlunosDiscSituacao rsClient = new RSCursoAlunosDiscSituacao(user.getToken());
+            RSCursoAlunosDiscSituacao rsClient = new RSCursoAlunosDiscSituacao(user.getToken(), ServiceVersion.V2);
             
-            CursoAlunosSituacaoResponse rsResponse = rsClient.get(codigo);
+            
+            
+            CursoAlunosSituacaoResponse rsResponse = (CursoAlunosSituacaoResponse) rsClient.get(codigo);
             if (rsResponse.getResponseStatus() != null) 
     			throw new Exception (rsResponse.getResponseStatus());
 
@@ -73,21 +78,24 @@ public class GetStudentData {
 	                bw.write(";"+disciplina.getAnoSemestre());
 	                bw.write(";"+disciplina.getDisciplina());
 	                bw.write(";"+(disciplina.getNota()==null ? "" : disciplina.getNota().trim()));
-	                bw.write(";"+disciplina.getSituacao() + "\n");
+	                bw.write(";"+disciplina.getSituacao());
+	                bw.write(";"+disciplina.getHorasAula() + "\n");
             	}
             }
     		bw.close();
     		fileout.close();
             System.out.println("Finalizado");
 			
-			
+		} catch (NotAuthorizedException e) {
+			System.out.println("Token inv√°lido");
+			e.printStackTrace();			
 		} catch (WsException_Exception e) {
-			//Impressão de erros
+			//ImpressÔøΩo de erros
 			System.out.println(e.getMessage());
 			System.out.println(e.getFaultInfo().getErrorUserMessage());
 		} catch (Exception e) {
-			//Impressão de erros
-			System.out.println("ERRO: usuário sem permissão");
+			//ImpressÔøΩo de erros
+			System.out.println("ERRO: usuÔøΩrio sem permissÔøΩo");
 			e.printStackTrace();
 		}
 		

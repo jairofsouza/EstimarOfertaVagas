@@ -1,10 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-package br.ufjf.ice.integra3.rs.restclient.model;
+package br.ufjf.ice.integra3.rs.restclient.model.v1;
 
 import java.io.Serializable;
 import java.util.List;
@@ -19,11 +13,7 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 @XmlSeeAlso({Disciplina.class})
 public class AlunoDisciplina implements Serializable
 {
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = -3789176376767778746L;
-	private List<Disciplina> disciplinaList;
+    private List<Disciplina> disciplinaList;
     
     public AlunoDisciplina()
     {

@@ -75,12 +75,12 @@ public class StudentReport {
 			if(aprovado.containsKey(c))
 			{
 				printTableRow(c);
-				creditos += c.getWeight();
+				creditos += c.getWorkload();
 				aprovado.remove(c);
 			} 	
 		}
 		
-		out.println("</tbody></tfoot><tr><td align=right width=100% colspan=2>Creditos em eletivas: " + creditos + "</td></tfoot></table>");
+		out.println("</tbody></tfoot><tr><td align=right width=100% colspan=2>Carga horaria em eletivas: " + creditos + "</td></tfoot></table>");
 		
 		//Disciplinas Opcionais
 		out.println("<br /><br /><h3 align=center>Opcionais Completadas</h3>");
@@ -93,10 +93,10 @@ public class StudentReport {
 		{
 				Class c = i.next();
 				printTableRow(c);
-				creditos += c.getWeight();
+				creditos += c.getWorkload();
 		}
 		
-		out.println("</tbody></tfoot><tr><td align=right width=100% colspan=2>Creditos em opcionas: " + creditos + "</td></tfoot></table>");
+		out.println("</tbody></tfoot><tr><td align=right width=100% colspan=2>Carga horaria em opcionas: " + creditos + "</td></tfoot></table>");
 		
 	}
 	
