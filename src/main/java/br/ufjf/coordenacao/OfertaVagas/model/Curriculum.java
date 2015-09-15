@@ -28,6 +28,12 @@ public class Curriculum {
 		this._electives = electives;
 	}
 	
+	public Curriculum(HashMap<Integer, TreeSet<Class>> mandatories, TreeSet<Class> electives)
+	{
+		this._curriculum = mandatories;
+		this._electives = electives;
+	}
+	
 	public void addElectiveClass(Class c) {
 		this._electives.add(c);
 	}
