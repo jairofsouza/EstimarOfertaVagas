@@ -1,18 +1,22 @@
 package br.ufjf.coordenacao.OfertaVagas.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Class implements Comparable<Class> {
 
-	String id;
-	ArrayList<Class> prerequisite = new ArrayList<Class>();
+	protected String id;
+	protected ArrayList<Class> prerequisite = new ArrayList<Class>();
 	private int workload;
+	protected List<Class> corequ;
 	
 	public Class(String id, int weight)
 	{
 		this.id = id;
 		this.workload = weight;
+		this.corequ = new ArrayList<Class>();
 	}
+	
 	
 	public Class(String id) {
 		this(id, 4);
@@ -22,6 +26,15 @@ public class Class implements Comparable<Class> {
 		this.prerequisite.add(c);
 	}
 
+	public void addCorequisite(Class c)
+	{
+		this.corequ.add(c);
+	}
+	
+	public List<Class> getCorequisite()
+	{
+		return this.corequ;
+	}
 	public ArrayList<Class> getPrerequisite() {
 		return this.prerequisite;
 	}

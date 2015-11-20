@@ -1,14 +1,17 @@
 package br.ufjf.coordenacao.OfertaVagas.loader;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.TreeSet;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
 import br.ufjf.coordenacao.OfertaVagas.model.Class;
+import br.ufjf.coordenacao.OfertaVagas.model.ClassContainer;
 import br.ufjf.coordenacao.OfertaVagas.model.ClassFactory;
 import br.ufjf.coordenacao.OfertaVagas.model.Curriculum;
 
@@ -17,9 +20,11 @@ public class CSVCurriculumLoader implements ICurriculumLoader {
 	private File _mandatoryFile;
 	private File _electiveFile;
 	private File _equivalenceFile;
+	private File _corequisiteFile;
 	private Curriculum _cur;
 	private boolean _multiple;
 	private IFilter _filter;
+	
 
 	public CSVCurriculumLoader(File mandatoryFile, File electiveFile,File equivalenceFile, IFilter filter) {
 		this._filter = filter;
@@ -33,6 +38,18 @@ public class CSVCurriculumLoader implements ICurriculumLoader {
 
 	public CSVCurriculumLoader(File mandatoryFile, File electiveFile,File equivalenceFile) {
 		this(mandatoryFile, electiveFile, equivalenceFile, new NoFilter());
+	}
+	
+	public CSVCurriculumLoader(File mandatoryFile, File electiveFile,File equivalenceFile, File corequisiteFile)
+	{
+		this._mandatoryFile = mandatoryFile;
+		this._electiveFile = electiveFile;
+		this._equivalenceFile = equivalenceFile;
+		this._corequisiteFile = corequisiteFile;
+		this._filter = new NoFilter();
+		
+		this._multiple = false;
+		this._cur = new Curriculum();
 	}
 
 	private Curriculum processCurriculum(boolean multiple) {
@@ -48,6 +65,9 @@ public class CSVCurriculumLoader implements ICurriculumLoader {
 			// final da carga de eletivas + obrigat—rias
 			if (this._equivalenceFile != null)
 				loadEquivalenceFile();
+			
+			if(this._corequisiteFile != null)
+				loadCorequisite();
 		}
 
 		catch (Exception e) {
@@ -99,6 +119,45 @@ public class CSVCurriculumLoader implements ICurriculumLoader {
 		in.close();
 	}
 
+	private void loadCorequisite() throws IOException, FileNotFoundException
+	{
+		Reader in = new FileReader(this._corequisiteFile);
+		Iterable<CSVRecord> eqRecords = CSVFormat.EXCEL.parse(in);
+
+		for (CSVRecord record : eqRecords)
+		{
+			String disciplina = record.get(0).trim();
+			String corequisito = record.get(1).trim();
+			
+			Class d = ClassFactory.getClass(disciplina);
+			Class cr = ClassFactory.getClass(corequisito);
+		
+			d.addCorequisite(cr);
+		}
+		
+		for(int i: _cur.getMandatories().keySet())
+		{
+			for(Class c: _cur.getMandatories().get(i))
+			{			
+				if(!c.getCorequisite().isEmpty())
+				{
+					ClassContainer cc = new ClassContainer("Co-requisitos");
+					cc.addClass(c);
+					
+					for(Class cr: c.getCorequisite())
+					{
+						_cur.getMandatories().get(i).remove(cr);
+						cc.addClass(cr);
+					}
+					
+					_cur.getMandatories().get(i).remove(c);
+					_cur.getMandatories().get(i).add(cc);
+				}
+			}
+		}
+		in.close();
+	}
+	
 	private void loadElectiveFile() throws IOException {
 		Reader in = new FileReader(this._electiveFile);
 		Iterable<CSVRecord> electiveRecords = CSVFormat.EXCEL.parse(in);
