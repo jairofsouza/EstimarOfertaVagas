@@ -1,6 +1,5 @@
 package br.ufjf.coordenacao.OfertaVagas.report;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TreeSet;
