@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.TreeSet;
 
 import org.apache.commons.csv.CSVFormat;
@@ -27,12 +29,7 @@ public class CSVCurriculumLoader implements ICurriculumLoader {
 	
 
 	public CSVCurriculumLoader(File mandatoryFile, File electiveFile,File equivalenceFile, IFilter filter) {
-		this._filter = filter;
-		this._mandatoryFile = mandatoryFile;
-		this._electiveFile = electiveFile;
-		this._equivalenceFile = equivalenceFile;
-		this._multiple = false;
-		this._cur = new Curriculum();
+		this(mandatoryFile, electiveFile, equivalenceFile, null, filter);
 
 	}
 
@@ -40,16 +37,21 @@ public class CSVCurriculumLoader implements ICurriculumLoader {
 		this(mandatoryFile, electiveFile, equivalenceFile, new NoFilter());
 	}
 	
-	public CSVCurriculumLoader(File mandatoryFile, File electiveFile,File equivalenceFile, File corequisiteFile)
+	public CSVCurriculumLoader(File mandatoryFile, File electiveFile,File equivalenceFile, File corequisiteFile, IFilter filter)
 	{
 		this._mandatoryFile = mandatoryFile;
 		this._electiveFile = electiveFile;
 		this._equivalenceFile = equivalenceFile;
 		this._corequisiteFile = corequisiteFile;
-		this._filter = new NoFilter();
+		this._filter = filter;
 		
 		this._multiple = false;
 		this._cur = new Curriculum();
+	}
+	
+	public CSVCurriculumLoader(File mandatoryFile, File electiveFile,File equivalenceFile, File corequisiteFile)
+	{
+		this(mandatoryFile, electiveFile, equivalenceFile, corequisiteFile, new NoFilter());
 	}
 
 	private Curriculum processCurriculum(boolean multiple) {
@@ -61,8 +63,8 @@ public class CSVCurriculumLoader implements ICurriculumLoader {
 			if (this._electiveFile != null)
 				loadElectiveFile();
 
-			// É necessário que o processamento de equivalências seja feito ao
-			// final da carga de eletivas + obrigatórias
+			// ¬É necess¬ário que o processamento de equival¬ências seja feito ao
+			// final da carga de eletivas + obrigat¬órias
 			if (this._equivalenceFile != null)
 				loadEquivalenceFile();
 			
@@ -107,7 +109,7 @@ public class CSVCurriculumLoader implements ICurriculumLoader {
 			this._cur.addMandatoryClass(Integer.valueOf(semester), c);
 
 			for (int i = 2; i < record.size()-1; i++) {
-				String prerequisite = record.get(i).trim(); // Pré-requisito
+				String prerequisite = record.get(i).trim(); // Pr¬é-requisito
 				Class pre = ClassFactory.getClass(prerequisite);
 				c.addPrerequisite(pre);
 			}
@@ -137,8 +139,14 @@ public class CSVCurriculumLoader implements ICurriculumLoader {
 		
 		for(int i: _cur.getMandatories().keySet())
 		{
-			for(Class c: _cur.getMandatories().get(i))
+			//for(Class c: _cur.getMandatories().get(i))
+			Iterator<Class> it = _cur.getMandatories().get(i).iterator();
+			
+			ArrayList<Class> duplicated = new ArrayList<Class>();
+			ArrayList<Class> insert = new ArrayList<Class>();
+			while(it.hasNext())
 			{			
+				Class c = it.next();
 				if(!c.getCorequisite().isEmpty())
 				{
 					ClassContainer cc = new ClassContainer("Co-requisitos");
@@ -146,14 +154,20 @@ public class CSVCurriculumLoader implements ICurriculumLoader {
 					
 					for(Class cr: c.getCorequisite())
 					{
-						_cur.getMandatories().get(i).remove(cr);
+						//_cur.getMandatories().get(i).remove(cr);
+						//it.remove();
+						duplicated.add(cr);
 						cc.addClass(cr);
 					}
 					
-					_cur.getMandatories().get(i).remove(c);
-					_cur.getMandatories().get(i).add(cc);
+					//_cur.getMandatories().get(i).remove(c);
+					it.remove();
+					insert.add(cc);
 				}
 			}
+			
+			_cur.getMandatories().get(i).removeAll(duplicated);
+			_cur.getMandatories().get(i).addAll(insert);
 		}
 		in.close();
 	}
@@ -169,7 +183,7 @@ public class CSVCurriculumLoader implements ICurriculumLoader {
 				this._cur.addElectiveClass(c);
 
 				for (int i = 1; i < record.size()-1; i++) {
-					String prerequisite = record.get(i).trim(); // Pré-requisito
+					String prerequisite = record.get(i).trim(); // Pr¬é-requisito
 					Class pre = ClassFactory.getClass(prerequisite);
 					c.addPrerequisite(pre);
 				}
@@ -197,20 +211,20 @@ public class CSVCurriculumLoader implements ICurriculumLoader {
 				idDaGrade = aux;
 			}
 
-			// TODO há um erro abaixo. Se já tem 2 disciplinas, tem que ver qual
-			// é a obrigatória/eletiva, caso contrário se apareceu 2x a
-			// equivalência, então dá erro. Ex: MAT114->MAT157 e MAT114->MAT156
+			// TODO h¬á um erro abaixo. Se j¬á tem 2 disciplinas, tem que ver qual
+			// ¬é a obrigat¬ória/eletiva, caso contr¬ário se apareceu 2x a
+			// equival¬ência, ent¬ão d¬á erro. Ex: MAT114->MAT157 e MAT114->MAT156
 			else if (ClassFactory.contains(idDaGrade)
 					&& ClassFactory.contains(idNaoDaGrade))
 				// throw new
-				// IOException("Equivalência de duas disciplinas já existentes na grade: "
+				// IOException("Equival¬ência de duas disciplinas j¬á existentes na grade: "
 				// + idDaGrade + " <-> " + idNaoDaGrade);
-				System.out.println("Equivalência de duas disciplinas já existentes na grade: "
+				System.out.println("Equival¬ência de duas disciplinas j¬á existentes na grade: "
 						+ idDaGrade + " <-> " + idNaoDaGrade);
 
 			else if (!ClassFactory.contains(idDaGrade)
 					&& !ClassFactory.contains(idNaoDaGrade))
-				System.out.println("Equivalência de duas disciplinas não existentes na grade: "
+				System.out.println("Equival¬ência de duas disciplinas n¬ão existentes na grade: "
 						+ idDaGrade + " <-> " + idNaoDaGrade);
 
 			c = ClassFactory.getClass(idDaGrade);
