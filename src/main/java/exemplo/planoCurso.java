@@ -16,17 +16,17 @@ public class planoCurso {
 	public static void main(String[] args) throws IOException
 	{
 		CSVCurriculumLoader csvcur = new CSVCurriculumLoader(
-				new File("data/35A_grade_obrigatorias_2014.txt"),
-				new File("data/35A_eletivas_2014.txt"),
+				new File("data/35A_grade_obrigatorias_2009.txt"),
+				new File("data/35A_eletivas_2009.txt"),
 				new File("data/35A_equivalencias.txt"));
 		Curriculum c = csvcur.getCurriculum();
 
-		CSVStudentLoader csv = new CSVStudentLoader(new File("data/35A_alunos_2014.csv"));
+		CSVStudentLoader csv = new CSVStudentLoader(new File("data/historicos_2015.3.csv"));
 		StudentsHistory sh = csv.getStudentsHistory();
 
-		Student st = sh.getStudents().get("268580002,7");
+		Student st = sh.getStudents().get("200935049");
 
-		StudentCoursePlan g = new StudentCoursePlan(st, c, 300, true);
+		StudentCoursePlan g = new StudentCoursePlan(st, c, 300, false, true);
 		Curriculum cur = g.generate();
 
 		for(int i : cur.getMandatories().keySet())
