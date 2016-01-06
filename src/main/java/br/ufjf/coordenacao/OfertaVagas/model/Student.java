@@ -109,7 +109,8 @@ public class Student implements Comparable<Student>{
 		if(weight == 0)
 			return 0;
 		
-		return (float) grade / weight;
+		float ira = (float) grade / weight;
+		return new BigDecimal(ira).setScale(2, RoundingMode.HALF_EVEN).floatValue();
 	}
 	
 	public void addClass(String _class, String semester, ClassStatus status, String grade, String weight) {
