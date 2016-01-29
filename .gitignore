@@ -22,3 +22,5 @@ pom.properties
 
 #
 data/*.html
+data/historicos_2015.3.csv
+*.txt

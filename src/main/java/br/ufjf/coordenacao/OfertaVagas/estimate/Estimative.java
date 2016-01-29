@@ -33,7 +33,16 @@ public class Estimative {
 				getQtdReprovedGradeWeighted()+
 				getQtdReprovedFreqWeighted();
 	}
-
+	
+	public void joinEstimative(Estimative e)
+	{
+		this.qtdCanHaveAllPreq += e.qtdCanHaveAllPreq;
+		this.qtdEnrolled += e.qtdEnrolled;
+		this.qtdHasAllPrereq += e.getQtdHasAllPrereq();
+		this.qtdReprovedFreq += e.getQtdReprovedFreq();
+		this.qtdReprovedGrade += e.getQtdReprovedGrade();
+	}
+	
 	/**
 	 * Esses valores guardam quantos alunos podem fazer a disciplina mas foram reprovados nela
 	 */

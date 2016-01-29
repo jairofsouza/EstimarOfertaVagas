@@ -51,9 +51,11 @@ public class CSVStudentLoader implements IStudentLoader {
 		    else if (classStatus.equals("Aprovado") || classStatus.equals("Dispensado")) status = ClassStatus.APPROVED;
 		    else if (classStatus.equals("Rep Nota")) status = ClassStatus.REPROVED_GRADE;
 		    else if (classStatus.equals("Rep Freq")) status = ClassStatus.REPROVED_FREQUENCY;
+		    else if (classStatus.equals("Trancado")) status = ClassStatus.NOT_ENROLLED;
 		    else continue; // do nothing
 		    	
 		    this.add(sh,
+		    		record.get(0).trim(), // curso
 		    		record.get(1).trim(), // matricula 
 		    		record.get(2).trim(), // nome
 		    		record.get(3).trim(), // curriculo
@@ -68,8 +70,8 @@ public class CSVStudentLoader implements IStudentLoader {
 		return sh;
 	}
 	
-	private void add(StudentsHistory sh, String id, String nome, String curriculum, String semester, String _class, String grade, String weight,  ClassStatus status) {
-    	sh.add(id, nome, curriculum, semester, _class, status, grade, weight);
+	private void add(StudentsHistory sh, String course, String id, String nome, String curriculum, String semester, String _class, String grade, String weight,  ClassStatus status) {
+    	sh.add(id, nome, course, curriculum, semester, _class, status, grade, weight);
 	}
 	
 }

@@ -1,13 +1,11 @@
 package br.ufjf.coordenacao.OfertaVagas.estimate;
 
-
-import br.ufjf.coordenacao.OfertaVagas.loader.CSVCurriculumLoader;
 import br.ufjf.coordenacao.OfertaVagas.model.Curriculum;
 import br.ufjf.coordenacao.OfertaVagas.model.StudentsHistory;
 
 public class EstimatorContainerSource {
 	private StudentsHistory sh;
-	private CSVCurriculumLoader c;
+	private Curriculum c;
 	private String curriculumid;
 	
 	public String getCurriculumId() {
@@ -24,10 +22,10 @@ public class EstimatorContainerSource {
 	}
 	
 	public Curriculum getCurriculum() {
-		return c.getCurriculum();
+		return c;
 	}
 
-	public void setCurriculum(CSVCurriculumLoader c) {
+	public void setCurriculum(Curriculum c) {
 		this.c = c;
 	}
 
@@ -39,7 +37,7 @@ public class EstimatorContainerSource {
 		this.sh = sh;
 	}
 
-	public EstimatorContainerSource(StudentsHistory sh, CSVCurriculumLoader c, String cur)
+	public EstimatorContainerSource(StudentsHistory sh, Curriculum c, String cur)
 	{
 		this.setSh(sh);
 		this.setCurriculum(c);

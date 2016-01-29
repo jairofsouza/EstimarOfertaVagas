@@ -7,6 +7,11 @@ public class ClassFactory {
 	private static ClassFactory _instance = null;
 	private HashMap<String, Class> map = new HashMap<String, Class>();
 	
+	public HashMap<String, Class> getMap()
+	{
+		return this.map;
+	}
+	
 	protected ClassFactory() {	}
 	
 	private static ClassFactory getInstance() { 
@@ -14,24 +19,35 @@ public class ClassFactory {
 		return _instance;
 	}
 	
-	public static Class getClass(String id) {
+	public static Class getClass(String course, String curriculum, String id) {
+		
+		//System.out.println(key + " " + c);
+		
+		String key = course + ";" + curriculum + ";" + id;
 		
 		HashMap<String, Class> cfmap = getInstance().map;
-		Class c = cfmap.get(id);
+		Class c = cfmap.get(key);
 		
 		if (c == null) {
 			c = new Class(id);
-			cfmap.put(id, c);
+			cfmap.put(key, c);
 		}
 		
+		//System.out.println(key + " " + c.getClass().);
 		return c;		
 	}
 	
-	public static void addClass(String id, Class c) {
+	public static void addClass(String course, String curriculum, String id, Class c) {
+		
+		id = course + ";" + curriculum + ";" + id;
+		
 		getInstance().map.put(id, c);
 	}
 	
-	public static boolean contains(String id) {
+	public static boolean contains(String course, String curriculum, String id) {
+		
+		id = course + ";" + curriculum + ";" + id;
+		
 		return getInstance().map.containsKey(id);
 	}
 	
