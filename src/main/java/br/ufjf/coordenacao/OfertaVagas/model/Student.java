@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.TreeSet;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class Student implements Comparable<Student>{
 
@@ -12,7 +14,9 @@ public class Student implements Comparable<Student>{
 	private String _id;
 	private String _nome;
 	private String _curriculum;
+	private String _course;
 	private TreeSet<Integer> _coursedSemesters;
+	//private TreeSet<String> _IRA_skipClasses;
 	
 	public String getNome() {
 		return _nome;
@@ -28,6 +32,16 @@ public class Student implements Comparable<Student>{
 
 	public void setCurriculum(String curriculum) {
 		this._curriculum = curriculum;
+	}
+	
+	public void setCourse(String course)
+	{
+		this._course = course;
+	}
+	
+	public String getCourse()
+	{
+		return this._course;
 	}
 	
 	public Student(String id) {
@@ -49,10 +63,15 @@ public class Student implements Comparable<Student>{
 		HashMap<Class, ArrayList<String[]>> cl;
 		int grade = 0;
 		int weight = 0;
-
+		
+		TreeSet<String> _IRA_skipClasses = CurriculumFactory.getCurriculum(_course, _curriculum).getIRA_skipClasses();
+		
 		cl = this.classes.get(ClassStatus.APPROVED);
 		if(cl != null) for(Class c: cl.keySet())
 		{
+			if(_IRA_skipClasses.contains(c.getId()))
+				continue;
+			
 			String[] exceptions = {"APR", "DISP", "A", "B", "C", "D", "E"};
 			List<String> Exceptions = Arrays.asList(exceptions);
 			
@@ -76,6 +95,9 @@ public class Student implements Comparable<Student>{
 		cl = this.classes.get(ClassStatus.REPROVED_GRADE);
 		if(cl != null) for(Class c:cl.keySet())
 		{
+			if(_IRA_skipClasses.contains(c.getId()))
+				continue;
+			
 			ArrayList<String[]> classdata = cl.get(c);
 			for(String[] s2: classdata)
 			{
@@ -95,6 +117,9 @@ public class Student implements Comparable<Student>{
 		cl = this.classes.get(ClassStatus.REPROVED_FREQUENCY);
 		if(cl != null) for(Class c: cl.keySet())
 		{	
+			if(_IRA_skipClasses.contains(c.getId()))
+				continue;
+			
 			ArrayList<String[]> classdata = cl.get(c);
 			for(String[] s2: classdata)
 			{
@@ -107,16 +132,18 @@ public class Student implements Comparable<Student>{
 		}
 		
 		if(weight == 0)
-			return 0;
+			return new BigDecimal(0.0f).setScale(2, RoundingMode.HALF_EVEN).floatValue();
 		
 		float ira = (float) grade / weight;
+		
 		return new BigDecimal(ira).setScale(2, RoundingMode.HALF_EVEN).floatValue();
+		
 	}
 	
 	public void addClass(String _class, String semester, ClassStatus status, String grade, String weight) {
 		
-		// A linha abaixo  necessâ€¡ria por conta das equivalncias de disciplinas
-		Class _class2 = ClassFactory.getClass(_class);
+		// A linha abaixo  necessària por conta das equivalncias de disciplinas
+		Class _class2 = ClassFactory.getClass(_course, _curriculum, _class);
 		
 		if (!this.classes.containsKey(status))
 			this.classes.put(status, new HashMap<Class, ArrayList<String[]>>());

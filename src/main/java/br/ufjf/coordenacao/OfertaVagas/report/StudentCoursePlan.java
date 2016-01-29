@@ -89,17 +89,17 @@ public class StudentCoursePlan {
 					courseCount++;
 				}
 			}
+			if (!t.isEmpty()) {
 				_notCompleted.put(i, t);
+			}
 		}
 
-		_periodWorkload = new int[courseCount+2];
+		_periodWorkload = new int[courseCount];
 
 		//Trata as disciplinas matriculadas
 		
-		TreeSet<Class> enrolledClasses = new TreeSet<Class>();
-		
 		if (_enrolled) {
-			
+			TreeSet<Class> enrolledClasses = new TreeSet<Class>();
 
 			for (Class cl : st.getClasses(ClassStatus.ENROLLED).keySet()) {
 				enrolledClasses.add(cl);
@@ -107,9 +107,11 @@ public class StudentCoursePlan {
 				//_skipClasses.addAll(cl.getPrerequisite());
 				
 			}
+			
+			_period.put(0, enrolledClasses);
 		}
 		
-		_period.put(0, enrolledClasses);	
+			
 
 		if (_periodWorkload[0] >= _maxWorkload)
 			_currentPeriod++;

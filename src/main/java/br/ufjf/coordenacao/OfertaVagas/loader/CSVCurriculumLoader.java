@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.TreeSet;
+//import java.util.TreeSet;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
@@ -15,6 +15,7 @@ import org.apache.commons.csv.CSVRecord;
 import br.ufjf.coordenacao.OfertaVagas.model.Class;
 import br.ufjf.coordenacao.OfertaVagas.model.ClassContainer;
 import br.ufjf.coordenacao.OfertaVagas.model.ClassFactory;
+import br.ufjf.coordenacao.OfertaVagas.model.CurriculumFactory;
 import br.ufjf.coordenacao.OfertaVagas.model.Curriculum;
 
 public class CSVCurriculumLoader implements ICurriculumLoader {
@@ -27,31 +28,37 @@ public class CSVCurriculumLoader implements ICurriculumLoader {
 	private boolean _multiple;
 	private IFilter _filter;
 	
+	private String _course = "";
+	private String _curriculumId = "";
+	
 
-	public CSVCurriculumLoader(File mandatoryFile, File electiveFile,File equivalenceFile, IFilter filter) {
-		this(mandatoryFile, electiveFile, equivalenceFile, null, filter);
+	
+	public CSVCurriculumLoader(String course, String curriculumId, File mandatoryFile, File electiveFile,File equivalenceFile, IFilter filter) {
+		this(course, curriculumId, mandatoryFile, electiveFile, equivalenceFile, null, filter);
 
 	}
 
-	public CSVCurriculumLoader(File mandatoryFile, File electiveFile,File equivalenceFile) {
-		this(mandatoryFile, electiveFile, equivalenceFile, new NoFilter());
+	public CSVCurriculumLoader(String course, String curriculumId, File mandatoryFile, File electiveFile,File equivalenceFile) {
+		this(course, curriculumId, mandatoryFile, electiveFile, equivalenceFile, new NoFilter());
 	}
 	
-	public CSVCurriculumLoader(File mandatoryFile, File electiveFile,File equivalenceFile, File corequisiteFile, IFilter filter)
+	public CSVCurriculumLoader(String course, String curriculumId, File mandatoryFile, File electiveFile,File equivalenceFile, File corequisiteFile, IFilter filter)
 	{
 		this._mandatoryFile = mandatoryFile;
 		this._electiveFile = electiveFile;
 		this._equivalenceFile = equivalenceFile;
 		this._corequisiteFile = corequisiteFile;
 		this._filter = filter;
+		this._course = course;
+		this._curriculumId = curriculumId;
 		
 		this._multiple = false;
 		this._cur = new Curriculum();
 	}
 	
-	public CSVCurriculumLoader(File mandatoryFile, File electiveFile,File equivalenceFile, File corequisiteFile)
+	public CSVCurriculumLoader(String course, String curriculumId, File mandatoryFile, File electiveFile,File equivalenceFile, File corequisiteFile)
 	{
-		this(mandatoryFile, electiveFile, equivalenceFile, corequisiteFile, new NoFilter());
+		this(course, curriculumId, mandatoryFile, electiveFile, equivalenceFile, corequisiteFile, new NoFilter());
 	}
 
 	private Curriculum processCurriculum(boolean multiple) {
@@ -63,8 +70,8 @@ public class CSVCurriculumLoader implements ICurriculumLoader {
 			if (this._electiveFile != null)
 				loadElectiveFile();
 
-			// ¬É necess¬ário que o processamento de equival¬ências seja feito ao
-			// final da carga de eletivas + obrigat¬órias
+			// É necessário que o processamento de equivalências seja feito ao
+			// final da carga de eletivas + obrigatórias
 			if (this._equivalenceFile != null)
 				loadEquivalenceFile();
 			
@@ -76,6 +83,9 @@ public class CSVCurriculumLoader implements ICurriculumLoader {
 			e.printStackTrace();
 			//System.exit(1);
 		}
+		
+		CurriculumFactory.putCurriculum(_course, _curriculumId, _cur);
+		
 		return this._cur;
 
 	}
@@ -105,12 +115,12 @@ public class CSVCurriculumLoader implements ICurriculumLoader {
 
 			String _class = record.get(1).trim(); // Disciplina
 
-			Class c = ClassFactory.getClass(_class);
+			Class c = ClassFactory.getClass(_course, _curriculumId,_class);
 			this._cur.addMandatoryClass(Integer.valueOf(semester), c);
 
 			for (int i = 2; i < record.size()-1; i++) {
-				String prerequisite = record.get(i).trim(); // Pr¬é-requisito
-				Class pre = ClassFactory.getClass(prerequisite);
+				String prerequisite = record.get(i).trim(); // Pré-requisito
+				Class pre = ClassFactory.getClass(_course, _curriculumId, prerequisite);
 				c.addPrerequisite(pre);
 			}
 			
@@ -131,8 +141,8 @@ public class CSVCurriculumLoader implements ICurriculumLoader {
 			String disciplina = record.get(0).trim();
 			String corequisito = record.get(1).trim();
 			
-			Class d = ClassFactory.getClass(disciplina);
-			Class cr = ClassFactory.getClass(corequisito);
+			Class d = ClassFactory.getClass(_course, _curriculumId, disciplina);
+			Class cr = ClassFactory.getClass(_course, _curriculumId, corequisito);
 		
 			d.addCorequisite(cr);
 		}
@@ -179,12 +189,12 @@ public class CSVCurriculumLoader implements ICurriculumLoader {
 		// TODO implementar o filtro
 		for (CSVRecord record : electiveRecords) {
 			if (this._filter.check(record)) {
-				Class c = ClassFactory.getClass(record.get(0).trim());
+				Class c = ClassFactory.getClass(_course, _curriculumId, record.get(0).trim());
 				this._cur.addElectiveClass(c);
 
 				for (int i = 1; i < record.size()-1; i++) {
-					String prerequisite = record.get(i).trim(); // Pr¬é-requisito
-					Class pre = ClassFactory.getClass(prerequisite);
+					String prerequisite = record.get(i).trim(); // Pré-requisito
+					Class pre = ClassFactory.getClass(_course, _curriculumId, prerequisite);
 					c.addPrerequisite(pre);
 				}
 				
@@ -204,33 +214,53 @@ public class CSVCurriculumLoader implements ICurriculumLoader {
 			String idNaoDaGrade = record.get(1).trim();
 
 			Class c = null;
-			if (!ClassFactory.contains(idDaGrade)
-					&& ClassFactory.contains(idNaoDaGrade)) {
+			if (!ClassFactory.contains(_course, _curriculumId, idDaGrade)
+					&& ClassFactory.contains(_course, _curriculumId, idNaoDaGrade)) {
 				String aux = idNaoDaGrade;
 				idNaoDaGrade = idDaGrade;
 				idDaGrade = aux;
 			}
 
-			// TODO h¬á um erro abaixo. Se j¬á tem 2 disciplinas, tem que ver qual
-			// ¬é a obrigat¬ória/eletiva, caso contr¬ário se apareceu 2x a
-			// equival¬ência, ent¬ão d¬á erro. Ex: MAT114->MAT157 e MAT114->MAT156
-			else if (ClassFactory.contains(idDaGrade)
-					&& ClassFactory.contains(idNaoDaGrade))
+			// TODO há um erro abaixo. Se já tem 2 disciplinas, tem que ver qual
+			// é a obrigatória/eletiva, caso contrário se apareceu 2x a
+			// equivalência, então dá erro. Ex: MAT114->MAT157 e MAT114->MAT156
+			else if (ClassFactory.contains(_course, _curriculumId, idDaGrade)
+					&& ClassFactory.contains(_course, _curriculumId, idNaoDaGrade))
 				// throw new
-				// IOException("Equival¬ência de duas disciplinas j¬á existentes na grade: "
+				// IOException("Equivalência de duas disciplinas já existentes na grade: "
 				// + idDaGrade + " <-> " + idNaoDaGrade);
-				System.out.println("Equival¬ência de duas disciplinas j¬á existentes na grade: "
+				System.out.println("Equivalência de duas disciplinas já existentes na grade " + _curriculumId +": "
 						+ idDaGrade + " <-> " + idNaoDaGrade);
 
-			else if (!ClassFactory.contains(idDaGrade)
-					&& !ClassFactory.contains(idNaoDaGrade))
-				System.out.println("Equival¬ência de duas disciplinas n¬ão existentes na grade: "
+			else if (!ClassFactory.contains(_course, _curriculumId, idDaGrade)
+					&& !ClassFactory.contains(_course, _curriculumId, idNaoDaGrade))
+				System.out.println("Equivalência de duas disciplinas não existentes na grade: "+ _curriculumId +" : "
 						+ idDaGrade + " <-> " + idNaoDaGrade);
 
-			c = ClassFactory.getClass(idDaGrade);
-			ClassFactory.addClass(idNaoDaGrade, c);
+			c = ClassFactory.getClass(_course, _curriculumId, idDaGrade);
+			Class c2 = ClassFactory.getClass(_course, _curriculumId, idNaoDaGrade);
+			ClassFactory.addClass(_course, _curriculumId, idNaoDaGrade, c);
+			
+			c2 = ClassFactory.getClass(_course, _curriculumId, idNaoDaGrade);
+			
 		}
 
 		in.close();
+	}
+
+	public String getCourse() {
+		return _course;
+	}
+
+	public void setCourse(String course) {
+		this._course = course;
+	}
+
+	public String getCurriculumId() {
+		return _curriculumId;
+	}
+
+	public void setCurriculumId(String curriculumId) {
+		this._curriculumId = curriculumId;
 	}
 }

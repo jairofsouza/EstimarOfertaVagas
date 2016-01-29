@@ -14,6 +14,7 @@ import br.ufjf.coordenacao.OfertaVagas.model.Curriculum;
 import br.ufjf.coordenacao.OfertaVagas.model.Student;
 import br.ufjf.coordenacao.OfertaVagas.model.StudentsHistory;
 import br.ufjf.coordenacao.OfertaVagas.model.Class;
+import br.ufjf.coordenacao.OfertaVagas.model.ClassFactory;
 
 public class HTMLDetailedReport extends EstimativeReport {
 
@@ -132,7 +133,7 @@ public class HTMLDetailedReport extends EstimativeReport {
 
 			for (Class c1 : classes) {
 			
-				int retorno = Estimator.processStudentCourseStatus(c1, st);
+				int retorno = Estimator.processStudentCourseStatus(ClassFactory.getClass(st.getCourse(), st.getCurriculum(), c1.getId()), st);
 				
 				if (retorno == 0) 		colorCode = this.color.get(ClassStatus.APPROVED);
 				else if (retorno == 1) 	colorCode = this.color.get(ClassStatus.ENROLLED);
@@ -160,9 +161,19 @@ public class HTMLDetailedReport extends EstimativeReport {
 	private void printTableBodyOptional(Student st, ArrayList<Class> classes) {
 		//Retira as disciplinas que o aluno fez como obrigat—rias e eletivas
 		out.print("<td colspan=60>");
-
+		
+		ArrayList<Class> classes2 = new ArrayList<Class>();
+		
+		for(Class c: classes)
+		{
+			classes2.add(ClassFactory.getClass(st.getCourse(), st.getCurriculum(), c.getId()));
+		}
+		
+		classes = classes2;
+		
 		String optional = "<b>Aprovado em </b>";
 		for (Class class1 : st.getClasses(ClassStatus.APPROVED).keySet()) {
+			//class1 = ClassFactory.getClass(st.getCourse(), st.getCurriculum(), class1.getId());
 			if (!classes.contains(class1)) optional += class1.getId() + ",";
 		}
 		if (!optional.equals("<b>Aprovado em </b>"))
@@ -170,6 +181,7 @@ public class HTMLDetailedReport extends EstimativeReport {
 
 		optional = "<b>Matriculado em </b>";
 		for (Class class1 : st.getClasses(ClassStatus.ENROLLED).keySet()) {
+			//class1 = ClassFactory.getClass(st.getCourse(), st.getCurriculum(), class1.getId());
 			if (!classes.contains(class1)) optional += class1.getId() + ",";
 		}
 		if (!optional.equals("<b>Matriculado em </b>"))

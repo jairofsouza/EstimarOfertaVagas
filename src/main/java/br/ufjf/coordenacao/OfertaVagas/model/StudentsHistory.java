@@ -13,7 +13,7 @@ public class StudentsHistory {
 		this._students = students;
 	}
 	
-	public void add(String id, String nome, String curriculum, String semester, String _class, ClassStatus status, String grade, String weight) {
+	public void add(String id, String nome, String course, String curriculum, String semester, String _class, ClassStatus status, String grade, String weight) {
 		
 		Student st = this._students.get(id);
 		
@@ -21,6 +21,7 @@ public class StudentsHistory {
 			st = new Student(id);
 			st.setNome(nome);
 			st.setCurriculum(curriculum);
+			st.setCourse(course);
 			this._students.put(id, st);
 		}
 		

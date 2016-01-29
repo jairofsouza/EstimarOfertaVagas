@@ -10,6 +10,9 @@ public class Curriculum {
 	
 	private TreeSet<Class> _electives = new TreeSet<Class>();
 	
+	private String _curriculumId;
+	private TreeSet<String> _IRA_skipClasses;
+	
 	public void addMandatoryClass(int semester, Class _class) {
 		
 		TreeSet<Class> tree = this._curriculum.get(semester);
@@ -82,5 +85,21 @@ public class Curriculum {
 		c._curriculum = new HashMap<Integer,TreeSet<Class>>();
 		c._curriculum.put(1,mandatories);
 		return c;
+	}
+
+	public String getCurriculumId() {
+		return _curriculumId;
+	}
+
+	public void setCurriculumId(String curriculumId) {
+		this._curriculumId = curriculumId;
+	}
+
+	public TreeSet<String> getIRA_skipClasses() {
+		return _IRA_skipClasses;
+	}
+
+	public void setIRA_skipClasses(TreeSet<String> _IRA_skipClasses) {
+		this._IRA_skipClasses = _IRA_skipClasses;
 	}
 }
