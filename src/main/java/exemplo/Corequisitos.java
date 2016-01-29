@@ -19,7 +19,7 @@ public class Corequisitos {
 		 * o arquivo dos corequisitos deve ser passado no construtor da classe
 		 * CSVCurriculumLoader
 		 */
-		CSVCurriculumLoader csvcur = new CSVCurriculumLoader(
+		CSVCurriculumLoader csvcur = new CSVCurriculumLoader("35A", "12014",
 				new File("data/35A_grade_obrigatorias_2014.txt"),
 				new File("data/35A_eletivas_2014.txt"),
 				new File("data/35A_equivalencias.txt"),
@@ -31,7 +31,7 @@ public class Corequisitos {
 		
 		Student s = sh.getStudents().get("268580001,3");
 		
-		StudentCoursePlan g = new StudentCoursePlan(s, c, 300, false);
+		StudentCoursePlan g = new StudentCoursePlan(s, c, 300, false, true);
 		Curriculum cur2 = g.generate();
 
 		for(int i : cur2.getMandatories().keySet())

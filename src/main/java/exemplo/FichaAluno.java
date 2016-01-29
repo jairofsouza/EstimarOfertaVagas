@@ -15,16 +15,18 @@ public class FichaAluno {
 	
 	public static void main(String[] args) throws IOException
 	{
-		CSVCurriculumLoader csvcur = new CSVCurriculumLoader(
-				new File("data/35A_grade_obrigatorias_2009.txt"),
-				new File("data/35A_eletivas_2009.txt"),
+		CSVCurriculumLoader csvcur = new CSVCurriculumLoader("35A", "12014",
+				new File("data/35A_grade_obrigatorias_2014.txt"),
+				new File("data/35A_eletivas_2014.txt"),
 				new File("data/35A_equivalencias.txt"));
-		Curriculum c = csvcur.getCurriculum();
 		
-		CSVStudentLoader csv = new CSVStudentLoader(new File("data/35A_alunos_2014.csv"));
+		Curriculum c = csvcur.getCurriculum();
+	
+		
+		CSVStudentLoader csv = new CSVStudentLoader(new File("data/historicos_2015.3.csv"));
 		StudentsHistory sh = csv.getStudentsHistory();
 		
-		Student st = sh.getStudents().get("267913344");
+		Student st = sh.getStudents().get("201435001");
 		
 		if(!new File("data/result/").exists())
 		{

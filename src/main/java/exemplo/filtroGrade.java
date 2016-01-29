@@ -26,16 +26,20 @@ public class filtroGrade {
 	public static void main(String args[]) throws IOException
 	{
 
+		String curso = "35A", 
+			   curriculo = "12014";
+		
 		/*
 		 * O construtor da classe CSVCurriculumLoader usa o arquivo de obrigatorias, eletivas e equivalencias da disciplina como parametros obrigatorios. O filtro e adicionado
 		 * no proximo parametro. ƒ possivel utilizar qualquer CurriculumFilter nesse campo (CurriculumDisciplineFiler, CurriculumElectiveFilter, ...).
 		 * Se nao for passado nenhum filtro, o construtor usa automaticamente o NoFilter, onde nenhum filtro e aplicado.
 		 */
-
-		CSVCurriculumLoader csvcur = new CSVCurriculumLoader(
+		
+		CSVCurriculumLoader csvcur = new CSVCurriculumLoader(curso, curriculo,
 				new File("data/35A_grade_obrigatorias_2014.txt"),
 				new File("data/35A_eletivas_2014.txt"),
 				new File("data/35A_equivalencias.txt"), new CurriculumElectivesFilter());
+
 		Curriculum c = csvcur.getCurriculum();
 		
 		/*
