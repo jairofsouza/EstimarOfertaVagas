@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.TreeSet;
 
 import br.ufjf.coordenacao.OfertaVagas.model.Class;
+import br.ufjf.coordenacao.OfertaVagas.model.ClassContainer;
 import br.ufjf.coordenacao.OfertaVagas.model.ClassStatus;
 import br.ufjf.coordenacao.OfertaVagas.model.Curriculum;
 import br.ufjf.coordenacao.OfertaVagas.model.Student;
@@ -16,7 +17,8 @@ public class Estimator {
 	private Curriculum curriculum;
 	private StudentsHistory history;
 	private EstimativesResult result;
-
+	private ArrayList<ClassContainer> corequisites;
+	
 	public Estimator(Curriculum c, StudentsHistory sh) {
 			this.curriculum = c;
 			this.history = sh;
@@ -98,7 +100,6 @@ public class Estimator {
 	 * @return -1 = nao pode cursar; 0 = aprovado; 1 = matriculado; 2 = reprovado por nota; 3 = reprovado por infrequencia; 4 = possui prerequisitos; 5 = est‡ matriculado nos prerequisitos
 	 */
 	public static int processStudentCourseStatus(Class discipline, Student student) {
-		
 		int retorno = -1;
 		
 		// Se o aluno j‡ passou na disciplina, n‹o entra na contagem
@@ -127,7 +128,20 @@ public class Estimator {
 		else {
 			int qtdPrereqCompleted = 0;
 			int qtdPrereqEnrolled = 0;
-			for(Class pre : discipline.getPrerequisite()) {
+			
+			TreeSet<Class> prerequisites = new TreeSet<Class>();
+			
+			prerequisites.addAll(discipline.getPrerequisite());
+			
+			//Se a disciplina possuir co-requisitos, os prerequisitos dela tambem serao levados em consideracao
+			if(!discipline.getCorequisite().isEmpty())
+			{
+				for(Class c: discipline.getCorequisite())
+					prerequisites.addAll(c.getPrerequisite());
+			}
+				
+			
+			for(Class pre : prerequisites) {
 				if (student.getClasses(ClassStatus.APPROVED).containsKey(pre)) 
 					qtdPrereqCompleted++;
 				
@@ -135,10 +149,13 @@ public class Estimator {
 					qtdPrereqEnrolled++;
 			}
 			
-			if(qtdPrereqCompleted == discipline.getPrerequisite().size()) retorno = 4;
-			else if (qtdPrereqCompleted + qtdPrereqEnrolled == discipline.getPrerequisite().size())	retorno = 5;
+			System.out.println(prerequisites);
+			
+			if(qtdPrereqCompleted == prerequisites.size()) retorno = 4;
+			else if (qtdPrereqCompleted + qtdPrereqEnrolled == prerequisites.size())	retorno = 5;
 	
 		}
+		
 		return retorno;
 	}
 	

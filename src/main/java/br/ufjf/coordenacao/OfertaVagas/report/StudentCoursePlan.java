@@ -1,5 +1,6 @@
 package br.ufjf.coordenacao.OfertaVagas.report;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TreeSet;
@@ -33,8 +34,45 @@ public class StudentCoursePlan {
 		_enrolled = showEnrolled;
 		//_skipClasses = new ArrayList<Class>();
 		
+		//Cria os containers de disciplinas que s‹o corequisitos
+		//TODO verificar se h‡ alguma incompatibilidade e evitar 2 "for"
+		for(int i: cur.getMandatories().keySet())
+		{
+			//for(Class c: _cur.getMandatories().get(i))
+			Iterator<Class> it = cur.getMandatories().get(i).iterator();
+			
+			ArrayList<Class> duplicated = new ArrayList<Class>();
+			ArrayList<Class> insert = new ArrayList<Class>();
+			while(it.hasNext())
+			{			
+				Class c = it.next();
+				if(!c.getCorequisite().isEmpty())
+				{
+					ClassContainer cc = new ClassContainer("Co-requisitos");
+					cc.addClass(c);
+					
+					for(Class cr: c.getCorequisite())
+					{
+						//_cur.getMandatories().get(i).remove(cr);
+						//it.remove();
+						duplicated.add(cr);
+						cc.addClass(cr);
+					}
+					
+					//_cur.getMandatories().get(i).remove(c);
+					it.remove();
+					insert.add(cc);
+				}
+			}
+			
+			cur.getMandatories().get(i).removeAll(duplicated);
+			cur.getMandatories().get(i).addAll(insert);
+		}
+		
+		
 		// Retira do curriculum as disciplinas que ainda nao forma cursadas
-		int courseCount = 0;
+		int courseCount = 1;
+		
 		
 		for (int i : cur.getMandatories().keySet()) 
 		{
@@ -70,9 +108,9 @@ public class StudentCoursePlan {
 						}
 					}
 
-					if (cc.getClasses().size() == 0)
+					/*if (cc.getClasses().size() == 0)
 						continue;
-
+					*/
 					if (cc.getClasses().size() == 1) {
 						t.add(cc.getClasses().get(0));
 						courseCount++;
@@ -83,8 +121,7 @@ public class StudentCoursePlan {
 
 				}
 
-				else if (!st.getClasses(ClassStatus.APPROVED).containsKey(c)
-						&& !st.getClasses(ClassStatus.ENROLLED).containsKey(c)) {
+				else if ((!st.getClasses(ClassStatus.APPROVED).containsKey(c) && !st.getClasses(ClassStatus.ENROLLED).containsKey(c))   	) {
 					t.add(c);
 					courseCount++;
 				}
@@ -132,11 +169,11 @@ public class StudentCoursePlan {
 		// com o primeiro periodo livre, e retorna o maior.\
 		int i = 0;
 		for (Class cl : c.getPrerequisite()) {
-			if (!_student.getClasses(ClassStatus.APPROVED).containsKey(cl)
-					|| !(_student.getClasses(ClassStatus.ENROLLED).containsKey(cl) && _enrolled)) {
+			if (!_student.getClasses(ClassStatus.APPROVED).containsKey(cl) && (!_student.getClasses(ClassStatus.ENROLLED).containsKey(cl))
+					|| (_student.getClasses(ClassStatus.ENROLLED).containsKey(cl) && _enrolled)) {
 				for (int p : _period.keySet()) {
 					if (_period.get(p).contains(cl))
-						if (p > i) {
+						if (p >= i) {
 							i = p;
 							if (i >= _currentPeriod)
 								i++;

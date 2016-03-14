@@ -146,7 +146,7 @@ public class CSVCurriculumLoader implements ICurriculumLoader {
 		
 			d.addCorequisite(cr);
 		}
-		
+		/* MOVIDO PARA O STUDENTCOURSEPLAN
 		for(int i: _cur.getMandatories().keySet())
 		{
 			//for(Class c: _cur.getMandatories().get(i))
@@ -179,6 +179,7 @@ public class CSVCurriculumLoader implements ICurriculumLoader {
 			_cur.getMandatories().get(i).removeAll(duplicated);
 			_cur.getMandatories().get(i).addAll(insert);
 		}
+		*/
 		in.close();
 	}
 	
